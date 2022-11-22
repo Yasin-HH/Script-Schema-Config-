@@ -24,6 +24,9 @@ from diagrams.onprem.client import Client
 with Diagram("Schema du reseau", show=False, filename="my-diagram", direction="BT"):
     #ajoutez les icônes au diagramme : 
     with Cluster ("Reseau"):
+        
+        
+        
         with Cluster("Reseau Interne1"):
             Routeur1 = VPCRouter("Routeur1")
             switch = OpsworksDeployments("Switch")
@@ -36,10 +39,11 @@ with Diagram("Schema du reseau", show=False, filename="my-diagram", direction="B
     
     
     #créer des dépendances entre les différents éléments du diagramme
-    Machine1 >> switch >> Routeur1
-    Machine2 >> Edge(color="firebrick", style="dashed") >> Routeur2  
-    Routeur2 >> Routeur1
-    Routeur2 << Routeur1
+    # - un lien 
+    # << ou >> une flèche
+    Machine1 - switch - Routeur1 
+    Machine2 - Edge(color="firebrick", style="dashed") - Routeur2  
+    Routeur2 - Routeur1
     
 
 
