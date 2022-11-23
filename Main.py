@@ -12,7 +12,18 @@ from diagrams.onprem.client import Client   #Image Machine
 
 import csv  #Import du mode csv
 from io import StringIO
-    
+
+import re #Utilisation des expressions régulières
+
+#Test de l'ip format
+pattern_ip = r'(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'           
+
+#Recuperation des adresse de reseau en /24 -> 255.255.255.0
+ip_24 = re.compile('[0-9]*.[^0-9]')
+
+
+#Liste des adresses de reseau
+list_of_res =[];
 
 #Liste des Adresse IP
 list_of_ip = [];
@@ -36,7 +47,6 @@ with Diagram("Schema du reseau", show=False, filename="Schema de configuration R
         listing = csv.reader(MA)
         listing.__next__()
         for row in listing :
-            
             #Si l'adresse 1 est vide on passe sinon on l'insert dans la list_of_ip
             if row[1] == '':
                 continue
@@ -48,11 +58,37 @@ with Diagram("Schema du reseau", show=False, filename="Schema de configuration R
                 continue
             else : 
                 list_of_ip.append((row[2]))
-            
-print(list_of_ip)   
 
-#Avec la liste des ip des machines recupérer seulement l'ip du reseau
+#recuperation de tout les ip des machine
+print(list_of_ip)  
+
+x = [];
+y = [];            
+i=0            
+#utilisation de l'expressions reguliere pour avoir seulement la partie reseau de l'ip
+while i < len(list_of_ip):
+    #l'expression reguliere separt en 3 bloc reseau don on doit les associers pour former la partie reseau
+    x = ip_24.findall(list_of_ip[i])
+    print(x)
+    #fusion des elements d'une meme liste 
+    y = ''.join(x)
+    i=i+1
+    #Ajout des ip reseau dans la list res alias "reseau"
+    #avec le fait que le reseau soit unique
+    if y in list_of_res:
+        continue
+    else : list_of_res.append(y)
+    
+    
+    
+    print(list_of_res)
+    
         
+        
+        
+print(list_of_res)
+ 
+
             
         #Pour chaque Machine dans un Reseau on le place dedans
 
