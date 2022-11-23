@@ -22,18 +22,22 @@ import csv
 # La directionest la direction dans laquelle vous voulez que le diagramme soit imprimé. 
 # Les valeurs prises en charge pour directionsommes TB(Haut -> Bas) et LR(Gauche -> Droite). 
 # Sélection du directionpeut faciliter la lecture du schéma. Pour ce diagramme, vous utiliserez LR.
-with Diagram("Schema du reseau", show=False, filename="my-diagram", direction="BT"):
+with Diagram("Schema du reseau", filename="my-diagram", direction="BT"):
     with Cluster ("Reseau"):
         
-        
-        
-        with Cluster("Reseau Interne1"):
+        with Cluster("192.168.3"):
+            
             Routeur1 = VPCRouter("Routeur1")
-            switch = OpsworksDeployments("Switch")
-            Machine1 = Client("Logstash service")
-        
-        with Cluster("Reseau Interne2"):
             Routeur2 = VPCRouter("Routeur2")
+            
+        with Cluster("192.168.1"):
+            Routeur1
+            switch1 = OpsworksDeployments("Switch1")
+            Machine1 = Client("Machine1")
+            
+        with Cluster("192.168.2"):
+            Routeur2
+            switch2 = OpsworksDeployments("Switch2")
             Machine2 = Client("Machine2")
         
     
@@ -41,8 +45,8 @@ with Diagram("Schema du reseau", show=False, filename="my-diagram", direction="B
     #créer des dépendances entre les différents éléments du diagramme
     # - un lien 
     # << ou >> une flèche
-    Machine1 - switch - Routeur1 
-    Machine2 - Edge(color="firebrick", style="dashed") - Routeur2  
+    Machine1 - switch1 - Routeur1 
+    Machine2 - switch2 - Routeur2  
     Routeur2 - Routeur1
     
 
