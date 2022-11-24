@@ -1,21 +1,25 @@
-import csv 
-list_of_ip = []
-i=1
+
+from diagrams import Cluster, Edge, Diagram
+from diagrams.aws.management import OpsworksDeployments
+from diagrams.aws.network import VPCRouter
+from diagrams.onprem.client import Client
 
 
-with open ('CSV/Machine_Adresse.csv','r')as MA:
-        listing = list(csv.reader(MA))   
+with Diagram("Schema du reseau", filename="my-diagramtest", direction="BT"):
+    with Cluster ("Reseau"):
         
-        for row in listing :
-            #Si l'adresse 1 est vide on passe sinon on l'insert dans la list_of_ip
-            if listing[1] == '':
-                    continue
-            else : list_of_ip.append((listing[i])[1]) 
-                
-            #Si l'adresse 2 est vide on passe sinon on l'insert dans la list_of_ip
-            if listing[2] == '':        
-                continue
-            else : list_of_ip.append((listing[i])[2])
-            i= i+1
-            
-print(list_of_ip)
+            R1 = VPCRouter("R1")
+            R2 = VPCRouter("R2")    
+            S1 = OpsworksDeployments("S1")
+            M1 = Client("M1")
+            S2 = OpsworksDeployments("S2")
+            M2 = Client("M2")
+    
+    
+    M1 - S1 
+    S1 - R1
+    M2 - S2 
+    S2 - R2
+    R2 - R1
+    
+

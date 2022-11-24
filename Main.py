@@ -13,10 +13,11 @@ from diagrams.onprem.client import Client   #Image Machine
 import csv  #Import du mode csv
 from io import StringIO
 
+
+'''
 import re #Utilisation des expressions régulières
 
-#Test de l'ip format
-pattern_ip = r'(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'           
+
 
 #Recuperation des adresse de reseau en /24 -> 255.255.255.0
 ip_24 = re.compile('[0-9]*.[^0-9]')
@@ -28,48 +29,40 @@ list_of_res =[];
 #Liste des Adresse IP
 list_of_ip = [];
 
-# Le showpeut l'ouvrir lors de la création, mais il a été défini sur False puisqu'on travaille sur un hôte Linux. 
-# Le fichier généré sera nommé quelle que soit la chaîne assignée à filename. 
-# La directionest la direction dans laquelle vous voulez que le diagramme soit imprimé. 
-# Les valeurs prises en charge pour directionsommes TB(Haut -> Bas) et LR(Gauche -> Droite). 
-with Diagram("Schema du reseau", show=False, filename="Schema de configuration Reseau", direction="BT"):
 
-
-#Fonctionnalité du Noyau
-#Avec des fichiers CSV déjà configurer
-#On crée une image du réseau
-
-
-#-----------------------Partie Node----------------------------
+#FONCTION AVANCEE
 #Recuperation de tout les reseaux Pour la création des clusteurs 
 #Utilisation du CSV Machine_Adresse
-    with open ('CSV/Machine_Adresse.csv','r')as MA:
-        listing = csv.reader(MA)
-        listing.__next__()
-        for row in listing :
-            #Si l'adresse 1 est vide on passe sinon on l'insert dans la list_of_ip
-            if row[1] == '':
-                continue
-            else : 
-                list_of_ip.append((row[1])) 
+with open ('CSV/Machine_Adresse.csv','r')as MA:
+    listing = csv.reader(MA)
+    listing.__next__()  #Enlever l'en tếte
+    for row in listing :
+#Si l'adresse 1 est vide on passe sinon on l'insert dans la list_of_ip
+        if row[1] == '':
+            continue
+        else : 
+            list_of_ip.append((row[1])) 
                 
-            #Si l'adresse 2 est vide on passe sinon on l'insert dans la list_of_ip
-            if row[2] == '':        
-                continue
-            else : 
-                list_of_ip.append((row[2]))
+        #Si l'adresse 2 est vide on passe sinon on l'insert dans la list_of_ip
+        if row[2] == '':        
+            continue
+        else : 
+            list_of_ip.append((row[2]))
+
 
 #recuperation de tout les ip des machine
-print(list_of_ip)  
+print(list_of_ip)
+
 
 x = [];
-y = [];            
-i=0            
+y = [];
+i=0
+
 #utilisation de l'expressions reguliere pour avoir seulement la partie reseau de l'ip
 while i < len(list_of_ip):
     #l'expression reguliere separt en 3 bloc reseau don on doit les associers pour former la partie reseau
     x = ip_24.findall(list_of_ip[i])
-    print(x)
+    
     #fusion des elements d'une meme liste 
     y = ''.join(x)
     i=i+1
@@ -78,18 +71,33 @@ while i < len(list_of_ip):
     if y in list_of_res:
         continue
     else : list_of_res.append(y)
-    
-    
-    
-    print(list_of_res)
-    
-        
-        
-        
-print(list_of_res)
- 
 
-            
+print(list_of_res)
+
+'''
+
+
+List_of_Interface = [];
+List_of_Name = [];
+
+# Le showpeut l'ouvrir lors de la création, mais il a été défini sur False puisqu'on travaille sur un hôte Linux. 
+# Le fichier généré sera nommé quelle que soit la chaîne assignée à filename. 
+# La directionest la direction dans laquelle vous voulez que le diagramme soit imprimé. 
+# Les valeurs prises en charge pour directionsommes TB(Haut -> Bas) et LR(Gauche -> Droite). 
+with Diagram("Schema du reseau", show=False, filename="Schema de configuration Reseau", direction="BT"):
+
+
+#On crée une image du réseau
+#-----------------------Partie Node----------------------------
+    with Cluster ("Reseau"):
+        
+            R1 = VPCRouter("R1")
+            R2 = VPCRouter("R2")    
+            S1 = OpsworksDeployments("S1")
+            M1 = Client("M1")
+            S2 = OpsworksDeployments("S2")
+            M2 = Client("M2")
+  
         #Pour chaque Machine dans un Reseau on le place dedans
 
 
@@ -106,13 +114,23 @@ print(list_of_res)
 #--------------------Partie Edge (Lien)------------------------
 #Utilisation du CSV Machine_Interface
 
+#Recuperation d'un fichier 
+    with open ('CSV/Machine_Interface.csv','r')as MI:
+        Interface = csv.DictReader(MI)
 
+        for row in Interface :
+            List_of_Interface.append(row)
 
+    
 
+    with open ('CSV/Machine_Name.csv','r')as MI:
+        Name = csv.DictReader(MI)
 
+        for row in Name :
+            List_of_Name.append(row)
 
-
-
+    print(List_of_Name)
+    print(List_of_Interface)
 
 
 #Fonctionnalité Avancée
@@ -168,10 +186,7 @@ def del_row(path, to_del):
         content = StringIO.write(to_keep)
         StringIO.close(content)
 
-
-
-
-#Hugo c'est quoi ?
+#Rechercher un element d'un fichier csv
 #def research(path, looking_for):
  #   with open (path, 'r') as file:
   #      obj = csv.reader(file, dialect='excel')

@@ -25,28 +25,24 @@ import csv
 with Diagram("Schema du reseau", filename="my-diagram", direction="BT"):
     with Cluster ("Reseau"):
         
-        with Cluster("192.168.3"):
-            
-            Routeur1 = VPCRouter("Routeur1")
-            Routeur2 = VPCRouter("Routeur2")
-            
-        with Cluster("192.168.1"):
-            Routeur1
-            switch1 = OpsworksDeployments("Switch1")
-            Machine1 = Client("Machine1")
-            
-        with Cluster("192.168.2"):
-            Routeur2
-            switch2 = OpsworksDeployments("Switch2")
-            Machine2 = Client("Machine2")
+            R1 = VPCRouter("R1")
+            R2 = VPCRouter("R2")    
+            S1 = OpsworksDeployments("S1")
+            M1 = Client("M1")
+            S2 = OpsworksDeployments("S2")
+            M2 = Client("M2")
         
     
     
     #créer des dépendances entre les différents éléments du diagramme
     # - un lien 
     # << ou >> une flèche
-    Machine1 - switch1 - Routeur1 
-    Machine2 - switch2 - Routeur2  
-    Routeur2 - Routeur1
+    
+    
+    M1 - S1 
+    S1 - R1
+    M2 - S2 
+    S2 - R2
+    R2 - R1
     
 
