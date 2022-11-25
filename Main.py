@@ -55,107 +55,42 @@ with open ('CSV/Machine_Types.csv','r')as MT:
             List_of_type.append(row[1])
         
 print (List_of_type)
-
-
-
-
-
-
-
-
-
-
-
-
-
 print(List_of_Interface)
 print(List_of_Name)
 print(List_of_Name2)
 
 
 
+# Le show peut l'ouvrir lors de la création, mais il a été défini sur False puisqu'on travaille sur un hôte Linux. 
+#filename = nom du fichier
+#Shema du reseau commentaire de l'image
+with Diagram("Schema du reseau", show=False, filename="Image_created/Schema de configuration Reseau", direction="BT"):
 
-
-# Le showpeut l'ouvrir lors de la création, mais il a été défini sur False puisqu'on travaille sur un hôte Linux. 
-# Le fichier généré sera nommé quelle que soit la chaîne assignée à filename. 
-# La directionest la direction dans laquelle vous voulez que le diagramme soit imprimé. 
-# Les valeurs prises en charge pour directionsommes TB(Haut -> Bas) et LR(Gauche -> Droite). 
-with Diagram("Schema du reseau", show=False, filename="Schema de configuration Reseau", direction="BT"):
-
-        
 
 #On crée une image du réseau
+
 #-----------------------Partie Node----------------------------
-        
-        List_of_Name2[0] = VPCRouter("R1")
-        R2 = VPCRouter("R2")    
-        S1 = OpsworksDeployments("S1")
-        M1 = Client("M1")
-        S2 = OpsworksDeployments("S2")
-        M2 = Client("M2")
+        #A chaque nom on lui attribue une image specifice  
+        List_of_Name2[0] = VPCRouter("")
+        List_of_Name2[1] = VPCRouter("")    
+        List_of_Name2[2] = OpsworksDeployments("")
+        List_of_Name2[4] = OpsworksDeployments("")
+        List_of_Name2[3] = Client("")
+        List_of_Name2[5] = Client("")
   
-        #Pour chaque Machine dans un Reseau on le place dedans
-
-
-        #En fonction de son Type on lui attribue une Image
-        #Partie Image
-        #Utilisation du CSV --Machine_Type
         
         
-        #Partie Nom 
-        #Utilisation du CSV Machine_Name
-
-        List_of_Name2[0] - S2
-
 #--------------------Partie Edge (Lien)------------------------
-#Utilisation du CSV Machine_Interface
+
+        #On doit utiliser la même variable que le nom
+        List_of_Name2[0] - List_of_Name2[1]
+        List_of_Name2[1] - List_of_Name2[4]
+        List_of_Name2[4] - List_of_Name2[5]
+        List_of_Name2[0] - List_of_Name2[2]
+        List_of_Name2[3] - List_of_Name2[2]
 
 
 
-        
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 
 #Fonctionnalité Avancée
 #Ajout d'une ligne
@@ -206,15 +141,11 @@ with Diagram("Schema du reseau", show=False, filename="Schema de configuration R
 '''
 import re #Utilisation des expressions régulières
 
-
-
 #Recuperation des adresse de reseau en /24 -> 255.255.255.0
 ip_24 = re.compile('[0-9]*.[^0-9]')
 
-
 #Liste des adresses de reseau
 list_of_res =[];
-
 #Liste des Adresse IP
 list_of_ip = [];
 
