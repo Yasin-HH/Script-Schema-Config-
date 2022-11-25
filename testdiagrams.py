@@ -80,21 +80,21 @@ print(List_of_Name2)
 # Le fichier généré sera nommé quelle que soit la chaîne assignée à filename. 
 # La directionest la direction dans laquelle vous voulez que le diagramme soit imprimé. 
 # Les valeurs prises en charge pour directionsommes TB(Haut -> Bas) et LR(Gauche -> Droite). 
-with Diagram("Schema du reseau", show=False, filename="my-diagram", direction="BT"):
+with Diagram("Schema du reseau", show=False, filename="Image_created/my-diagram", direction="BT"):
 
-        i =1
-        for i, row in List_of_type:
+        
+        for row in List_of_type:
             if row == 'Routeur':
-                R = VPCRouter("R{i}")
+                R = VPCRouter("Routeur")
             elif row == 'Switch':
-                S = OpsworksDeployments("S{i}")
+                S = OpsworksDeployments("Switch")
             else : 
-                M = Client("M")
+                M = Client("Machine")
 
 #On crée une image du réseau
 #-----------------------Partie Node----------------------------
         
-        List_of_Name2[0] = R
+        R1 = R
         R2 = R 
         S1 = S
         M1 = M
