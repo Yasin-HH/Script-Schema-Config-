@@ -62,13 +62,13 @@ List_of_complet =List= List_of_Name
 print(List_of_complet)
 
 
-#Fusion de list interface et du nom_of_complet
+"""#Fusion de list interface et du nom_of_complet
 for row in List_of_Interface:
     for row1 in List_of_Name2:
         if row['Id_Machine'] == row1['Id_Machine']:
         .append(row("Id_Machine","Interface1","Interface2",'Machine_Name'))
 print(List_of_complet)
-
+"""
 
 # Le show peut l'ouvrir lors de la création, mais il a été défini sur False puisqu'on travaille sur un hôte Linux. 
 #filename = nom du fichier
