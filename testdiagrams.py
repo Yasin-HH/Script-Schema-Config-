@@ -13,7 +13,7 @@ from diagrams.onprem.client import Client   #Image Machine
 import csv  #Import du mode csv
 from io import StringIO
 
-
+import pandas
 
 
 
@@ -21,7 +21,7 @@ List_of_Interface = [];
 List_of_Name = [];
 List_of_Name2 = []
 List_of_type = []
-
+List_of_complet = []
 #Dictionnaire du Machine_Interface
 with open ('CSV/Machine_Interface.csv','r')as MI:
     Interface = csv.DictReader(MI)
@@ -53,116 +53,59 @@ with open ('CSV/Machine_Types.csv','r')as MT:
             continue
         else :
             List_of_type.append(row[1])
-        
+        '''
 print (List_of_type)
-
-
-
-
-
-
-
-
-
-
-
-
-
 print(List_of_Interface)
 print(List_of_Name)
-print(List_of_Name2)
+print(List_of_Name2)'''
+
+data = pandas.read_csv('CSV/Machine_Name.csv')
+data1 = pandas.read_csv('CSV/Machine_Types.csv')
+print(data)
+a=pandas.merge(data,data1)
+print(a)
 
 
+#Fusion de list interface et du nom
+"""for row in List_of_Interface:
+    for row1 in List_of_Name:
+        if row['Id_Machine'] == row1['Id_Machine']:
+            List_of_complet.append('Id_Machine','Machine_Name','Interface1','Interface2')
+        else :
+            continue        
+print(List_of_complet)"""
 
 
+# Le show peut l'ouvrir lors de la création, mais il a été défini sur False puisqu'on travaille sur un hôte Linux. 
+#filename = nom du fichier
+#Shema du reseau commentaire de l'image
+with Diagram("Schema du reseau", show=False, filename="Image_created/Schema de configuration Reseau", direction="BT"):
 
-# Le showpeut l'ouvrir lors de la création, mais il a été défini sur False puisqu'on travaille sur un hôte Linux. 
-# Le fichier généré sera nommé quelle que soit la chaîne assignée à filename. 
-# La directionest la direction dans laquelle vous voulez que le diagramme soit imprimé. 
-# Les valeurs prises en charge pour directionsommes TB(Haut -> Bas) et LR(Gauche -> Droite). 
-with Diagram("Schema du reseau", show=False, filename="Image_created/my-diagram", direction="BT"):
-
-        
-        for row in List_of_type:
-            if row == 'Routeur':
-                R = VPCRouter("Routeur")
-            elif row == 'Switch':
-                S = OpsworksDeployments("Switch")
-            else : 
-                M = Client("Machine")
 
 #On crée une image du réseau
+
 #-----------------------Partie Node----------------------------
-        
-        R1 = R
-        R2 = R 
-        S1 = S
-        M1 = M
-        S2 = S
-        M2 = M
+        #A chaque nom on lui attribue une image specifice  
+        List_of_Name2[0] = VPCRouter("")
+        List_of_Name2[1] = VPCRouter("")    
+        List_of_Name2[2] = OpsworksDeployments("")
+        List_of_Name2[4] = OpsworksDeployments("")
+        List_of_Name2[3] = Client("")
+        List_of_Name2[5] = Client("")
   
-        #Pour chaque Machine dans un Reseau on le place dedans
-
-
-        #En fonction de son Type on lui attribue une Image
-        #Partie Image
-        #Utilisation du CSV --Machine_Type
         
         
-        #Partie Nom 
-        #Utilisation du CSV Machine_Name
-
-        List_of_Name2[0] - S2
-
 #--------------------Partie Edge (Lien)------------------------
-#Utilisation du CSV Machine_Interface
+
+        #On doit utiliser la même variable que le nom
+        List_of_Name2[0] - List_of_Name2[1]
+        List_of_Name2[1] - List_of_Name2[4]
+        List_of_Name2[4] - List_of_Name2[5]
+        List_of_Name2[0] - List_of_Name2[2]
+        List_of_Name2[3] - List_of_Name2[2]
 
 
 
-        
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 
 #Fonctionnalité Avancée
 #Ajout d'une ligne
@@ -213,15 +156,11 @@ with Diagram("Schema du reseau", show=False, filename="Image_created/my-diagram"
 '''
 import re #Utilisation des expressions régulières
 
-
-
 #Recuperation des adresse de reseau en /24 -> 255.255.255.0
 ip_24 = re.compile('[0-9]*.[^0-9]')
 
-
 #Liste des adresses de reseau
 list_of_res =[];
-
 #Liste des Adresse IP
 list_of_ip = [];
 

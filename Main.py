@@ -21,7 +21,7 @@ List_of_Interface = [];
 List_of_Name = [];
 List_of_Name2 = []
 List_of_type = []
-
+List_of_complet = []
 #Dictionnaire du Machine_Interface
 with open ('CSV/Machine_Interface.csv','r')as MI:
     Interface = csv.DictReader(MI)
@@ -53,12 +53,21 @@ with open ('CSV/Machine_Types.csv','r')as MT:
             continue
         else :
             List_of_type.append(row[1])
-        
+        '''
 print (List_of_type)
 print(List_of_Interface)
 print(List_of_Name)
-print(List_of_Name2)
+print(List_of_Name2)'''
+List_of_complet =List= List_of_Name
+print(List_of_complet)
 
+
+#Fusion de list interface et du nom_of_complet
+for row in List_of_Interface:
+    for row1 in List_of_Name2:
+        if row['Id_Machine'] == row1['Id_Machine']:
+        .append(row("Id_Machine","Interface1","Interface2",'Machine_Name'))
+print(List_of_complet)
 
 
 # Le show peut l'ouvrir lors de la création, mais il a été défini sur False puisqu'on travaille sur un hôte Linux. 
