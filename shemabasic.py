@@ -15,6 +15,8 @@ List_of_complet = []
 
 #lier au find_Interface
 result = []
+interutil = []
+
 
 #------------------------OUVERTURE DES CSV----------------------
 
@@ -132,42 +134,64 @@ with Diagram("Schema du reseau", show=False, filename="Image_created/basic", dir
         
         
         for row in List_of_complet:
+            
+            interutil.append(row['Interface1'])
+            
+            print("Ligne sur laquelle on test")
             print(row)
+            
             search = row['Interface1']
             search = search[3:]
-            find_Interface("CSV/Machine_Interface.csv",search)
+            print(search)
             
+            find_Interface("CSV/Machine_Interface.csv",search)
             result.remove(str(row['Interface1']))
+            print("Interface connecter")
+            print(result)
+            
             
             for elem in result:
-                for row1 in List_of_complet:
-                    if elem == row1['Interface1']:
-                        row['Image'] - row1['Image']
-                    elif elem == row1['Interface2']:
-                        row['Image'] - row1['Image']
+                if elem in interutil:
+                    continue
+                else :
+                    for row1 in List_of_complet:
+                        if elem == row1['Interface1']:
+                            row['Image'] - row1['Image']
+                        elif elem == row1['Interface2']:
+                            row['Image'] - row1['Image']
             result = []
-
-
+            print("Inrerutils")
+            
+        interutil = []
 
         for row in List_of_complet:
+            
+            print("Ligne sur laquelle on test")
             print(row)
+            
+            
             if row['Interface2'] == "":
-                break
+                continue
             else:
+                
+                interutil.append(row['Interface2'])
+                
                 search = row['Interface2']
-                print(search)
                 search = search[3:]
                 print(search)
+                
                 find_Interface2("CSV/Machine_Interface.csv",search)
-                print(result)
                 result.remove(str(row['Interface2']))
                 print(result)
                 
                 for elem in result:
-                    print(elem)
-                    for row1 in List_of_complet:
-                        if elem == row1['Interface2']:
-                            row['Image'] - row1['Image']
+                    if elem in interutil:
+                        continue
+                    else :
+                        print(elem)
+                        for row1 in List_of_complet:
+                            if elem == row1['Interface2']:
+                                row['Image'] - row1['Image']
                 result = []
                 print(result)
-                
+            
