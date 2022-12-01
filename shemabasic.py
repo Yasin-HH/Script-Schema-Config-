@@ -132,6 +132,5 @@ with Diagram("Schema du reseau", show=False, filename="Image_created/basic", dir
                         row['Image'] - row1['Image']
                     elif elem == row1['Interface2']:
                         row['Image'] - row1['Image']
-            
             result = []
             
