@@ -74,10 +74,7 @@ for row in List_of_complet:
             continue
 
 
-#--------------------------METHODE POUR BOUCLER SUR CHAQUE INTERFACE POUR GARDER LE LIEN AVEC LE TYPE-------------pour continuer le lien
-    
-#for row in List_of_complet:
- #       print(row)
+
 
 #-------------------------RECUPERATION DES INTERFACES DES MACHINES---------------------------
 #tdebut "recherche de liens"
@@ -99,6 +96,20 @@ def find_Interface(path, looking_for):
             print("here should be an error")
 #fin "recherche de liens"
 
+
+def find_Interface2(path, looking_for):
+    with open(path, 'r') as file:
+        if (path.__contains__("CSV/Machine_Interface")):
+            reader = csv.DictReader(file)
+            for line in reader:
+                test2 = line["Interface2"]
+                if (test2.__contains__(looking_for)):
+                    result.append(test2)
+            return result
+        else:
+            print("here should be an error")
+#fin "recherche de liens"
+
 #-------------------------GENERATION DE L'IMAGE BASIC------------------------
 
 with Diagram("Schema du reseau", show=False, filename="Image_created/basic", direction="BT"):
@@ -115,15 +126,17 @@ with Diagram("Schema du reseau", show=False, filename="Image_created/basic", dir
             else :
                 row['Image'] = Client(str(row['Name']))
                 
-                
 #--------------------Partie Edge (Lien)------------------------
-        
+    
         #On doit utiliser la même variable que le nom
+        
+        
         for row in List_of_complet:
             print(row)
             search = row['Interface1']
             search = search[3:]
             find_Interface("CSV/Machine_Interface.csv",search)
+            
             result.remove(str(row['Interface1']))
             
             for elem in result:
@@ -133,4 +146,28 @@ with Diagram("Schema du reseau", show=False, filename="Image_created/basic", dir
                     elif elem == row1['Interface2']:
                         row['Image'] - row1['Image']
             result = []
-            
+
+
+
+        for row in List_of_complet:
+            print(row)
+            if row['Interface2'] == "":
+                break
+            else:
+                search = row['Interface2']
+                print(search)
+                search = search[3:]
+                print(search)
+                find_Interface2("CSV/Machine_Interface.csv",search)
+                print(result)
+                result.remove(str(row['Interface2']))
+                print(result)
+                
+                for elem in result:
+                    print(elem)
+                    for row1 in List_of_complet:
+                        if elem == row1['Interface2']:
+                            row['Image'] - row1['Image']
+                result = []
+                print(result)
+                
