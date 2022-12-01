@@ -53,22 +53,29 @@ with open ('CSV/Machine_Types.csv','r')as MT:
             continue
         else :
             List_of_type.append(row[1])
-        '''
-print (List_of_type)
-print(List_of_Interface)
-print(List_of_Name)
-print(List_of_Name2)'''
-List_of_complet =List= List_of_Name
-print(List_of_complet)
+        
 
+List_of_complet = List_of_Interface.copy()
 
-"""#Fusion de list interface et du nom_of_complet
-for row in List_of_Interface:
-    for row1 in List_of_Name2:
+#Fusion de interface et du name
+for row in List_of_complet:
+    for row1 in List_of_Name:
         if row['Id_Machine'] == row1['Id_Machine']:
-        .append(row("Id_Machine","Interface1","Interface2",'Machine_Name'))
+            row['Machine_Name'] = row1['Machine_Name']
+        else:
+            continue
+
 print(List_of_complet)
-"""
+
+#Match de l'interface avec les autre interface si un lien le mettre
+for row in List_of_complet:
+    for row1 in List_of_Name:
+        if row['Id_Machine'] == row1['Id_Machine']:
+            row['Machine_Name'] = row1['Machine_Name']
+        else:
+            continue
+
+
 
 # Le show peut l'ouvrir lors de la création, mais il a été défini sur False puisqu'on travaille sur un hôte Linux. 
 #filename = nom du fichier
@@ -76,31 +83,45 @@ print(List_of_complet)
 with Diagram("Schema du reseau", show=False, filename="Image_created/Schema de configuration Reseau", direction="BT"):
 
 
-#On crée une image du réseau
-
 #-----------------------Partie Node----------------------------
-        #A chaque nom on lui attribue une image specifice  
-        List_of_Name2[0] = VPCRouter("")
-        List_of_Name2[1] = VPCRouter("")    
-        List_of_Name2[2] = OpsworksDeployments("")
-        List_of_Name2[4] = OpsworksDeployments("")
-        List_of_Name2[3] = Client("")
-        List_of_Name2[5] = Client("")
-  
-        
-        
+#On crée une image du réseau
+#A chaque nom on lui attribue une image specifice
+
 #--------------------Partie Edge (Lien)------------------------
 
         #On doit utiliser la même variable que le nom
-        List_of_Name2[0] - List_of_Name2[1]
-        List_of_Name2[1] - List_of_Name2[4]
-        List_of_Name2[4] - List_of_Name2[5]
-        List_of_Name2[0] - List_of_Name2[2]
-        List_of_Name2[3] - List_of_Name2[2]
-
-
-
-
+    for row in List_of_complet:
+        print(row)
+        
+        
+        
+        
+        
+        
+        #Chaque lien avec 
+        #Machine - Switch
+        #Machine - Routeur
+        #Machine - Machine
+        #Switch - Routeur
+        #Switch - Switch
+        #Routeur - Routeur
+        
+        #si l'interface est egale à lui mème passe (continue)
+            #si de /X est egale au /Y d'un autre interface alors faire un lien entre le type de /X et le type de /Y
+            #sinon continue
+        #sinon continue
+        for row1 in List_of_complet:
+            print(row1['Interface1'])
+            print (row1['Interface2'])
+            
+            if row == 'Routeur':
+                VPCRouter("") - VPCRouter("")
+            elif row == 'Switch':
+                S = OpsworksDeployments("")
+            else : 
+                M = Client("")
+                
+            M - S
 #Fonctionnalité Avancée
 #Ajout d'une ligne
 '''def add_row(path):

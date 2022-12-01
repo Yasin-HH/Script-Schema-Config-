@@ -57,24 +57,26 @@ with open ('CSV/Machine_Types.csv','r')as MT:
 print (List_of_type)
 print(List_of_Interface)
 print(List_of_Name)
-print(List_of_Name2)'''
+'''
+#print(List_of_Name2)
 
+'''
 data = pandas.read_csv('CSV/Machine_Name.csv')
 data1 = pandas.read_csv('CSV/Machine_Types.csv')
 print(data)
 a=pandas.merge(data,data1)
 print(a)
-
+'''
 
 #Fusion de list interface et du nom
-"""for row in List_of_Interface:
+'''for row in List_of_Interface:
     for row1 in List_of_Name:
         if row['Id_Machine'] == row1['Id_Machine']:
-            List_of_complet.append('Id_Machine','Machine_Name','Interface1','Interface2')
+            List_of_complet.append(row1)
         else :
             continue        
-print(List_of_complet)"""
-
+print(List_of_complet)
+'''
 
 # Le show peut l'ouvrir lors de la création, mais il a été défini sur False puisqu'on travaille sur un hôte Linux. 
 #filename = nom du fichier
@@ -85,6 +87,7 @@ with Diagram("Schema du reseau", show=False, filename="Image_created/Schema de c
 #On crée une image du réseau
 
 #-----------------------Partie Node----------------------------
+        
         #A chaque nom on lui attribue une image specifice  
         List_of_Name2[0] = VPCRouter("")
         List_of_Name2[1] = VPCRouter("")    
@@ -92,9 +95,8 @@ with Diagram("Schema du reseau", show=False, filename="Image_created/Schema de c
         List_of_Name2[4] = OpsworksDeployments("")
         List_of_Name2[3] = Client("")
         List_of_Name2[5] = Client("")
-  
-        
-        
+
+
 #--------------------Partie Edge (Lien)------------------------
 
         #On doit utiliser la même variable que le nom
@@ -213,7 +215,35 @@ print(list_of_res)
 
 
 
+"""
+for row in List_of_complet:
+        print(row)
+        for row1 in List_of_complet:
+    
+        #On crée une image du réseau
+            if row['Type'] == 'Routeur':
+                if row1['Type'] == 'Switch':
+                        row['Type'] = VPCRouter("")
+                    
+            elif row['Type'] == 'Switch':
+                if row1['Type'] == 'Switch':
+                    OpsworksDeployments("") - OpsworksDeployments("")
+                elif row1['Type'] == 'Routeur':
+                    OpsworksDeployments("") - VPCRouter("")
+                else:
+                    OpsworksDeployments("") - Client("")
+                            
+            else :
+                if row1['Type'] == 'Switch':
+                    Client("") - OpsworksDeployments("")
+                elif row1['Type'] == 'Routeur':
+                    Client("") - VPCRouter("")
+                else:
+                    Client("") - Client("")
 
+
+
+"""
 
 
 
