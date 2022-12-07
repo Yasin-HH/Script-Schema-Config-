@@ -64,7 +64,7 @@ def list_complet():
     for row in List_of_complet:
         for row1 in List_of_type:
             if row['Id_machine'] == row1['Id_machine']:
-                row['Type'] = row1['Machine_Type']
+                row['Type'] = row1['Machine_type']
             else:
                 continue
 
@@ -72,8 +72,8 @@ def list_complet():
     for row in List_of_complet:
         for row1 in List_of_addresse:
             if row['Id_machine'] == row1['Id_machine']:
-                row['adresse1'] = row1['Adress1']
-                row['adresse2'] = row1['Adress2']
+                row['adresse1'] = row1['Address1']
+                row['adresse2'] = row1['Address2']
                 row['Masque'] = row1['Masque']
             else:
                 continue
@@ -162,17 +162,14 @@ def resunique():
         if y in list_of_res:
             continue
         else : list_of_res.append(y)
+    list_of_res = list_of_res[1:] #Del addres in list_of_res
     return list_of_res
 
 #-------------------------GENERATION DE L'IMAGE BASIC------------------------
 def gen_img():
-    
-    
     List_of_complet = list_complet()
     interutil = [] #lier au find_Interface
     interutil1 = [] #lier au find_Interface
-     
- 
     with Diagram("Schema du reseau", show=False, filename="Image/Image_basic1", direction="BT"):
 
 #-----------------------Partie Node----------------------------
@@ -188,13 +185,6 @@ def gen_img():
                 print('Error Type')
                 
 #--------------------Partie Edge (Lien)------------------------ 
-
-
-        #CLUSTER
-
-        
-        
-        
         for row in List_of_complet:          
             interutil.append(row['Interface1'])
             search = row['Interface1']
@@ -233,10 +223,71 @@ def gen_img():
                                 row['Image'] - row1['Image']
                 result = []            
                 
-            
-                
+           
+def gen_imgcluster():
+    List_of_res = resunique()
+    print(List_of_res)
+    List_of_complet = list_complet()
+    interutil = [] #lier au find_Interface
+    interutil1 = [] #lier au find_Interface
+    with Diagram("Schema du reseau", show=False, filename="Image/Image_basic1", direction="BT"):
+#-----------------------Partie Node----------------------------
+        #A chaque Type on lui attribue une image specifice  
+        for row in List_of_complet:
+            if row['Type'] == 'Routeur':
+                row['Image'] = VPCRouter(str(row['Name']))
+            elif row['Type'] == 'Switch':
+                row['Image'] = OpsworksDeployments(str(row['Name']))
+            elif row ['Type'] == 'Machine':
+                row['Image'] = Client(str(row['Name']))
+            else :
+                print('Error Type')         
+#--------------------Partie Edge (Lien)------------------------ 
+        #CLUSTER
+        for l in List_of_res:
+            with Cluster (l):
+                Client('seul')
 
-list_complet()
-gen_img()
-test = resunique()
-print(test)
+        for row in List_of_complet:          
+            interutil.append(row['Interface1'])
+            search = row['Interface1']
+            search = search[3:]
+            result = find_Interface("csv/Machine_Interface.csv",search)
+            result.remove(str(row['Interface1']))
+            for elem in result:
+                if elem in interutil:
+                    continue
+                else :
+                    for row1 in List_of_complet:
+                        if elem == row1['Interface1']:
+                            row['Image'] - row1['Image']
+                        elif elem == row1['Interface2']:
+                            row['Image'] - row1['Image']
+            result = []
+            #print("Inrerutils")
+            
+        interutil = []
+        for row in List_of_complet:
+            if row['Interface2'] == "":
+                continue
+            else:
+                interutil.append(row['Interface2'])
+                search = row['Interface2']
+                search = search[3:]
+                result = find_Interface2("csv/Machine_Interface.csv",search)
+                result.remove(str(row['Interface2']))
+                for elem in result:
+                    if elem in interutil:
+                        continue
+                    else :
+                        
+                        for row1 in List_of_complet:
+                            if elem == row1['Interface2']:
+                                row['Image'] - row1['Image']
+                result = []            
+
+#Ce qui sert pour crée les fonctions
+gen_imgcluster()
+
+
+
