@@ -28,7 +28,7 @@ def namecsv():
 def typecsv():
     List_of_type = []
     #Dictionnaire du types
-    with open ('csv/Machine_Types.csv','r')as MT:
+    with open ('csv/Machine_Type.csv','r')as MT:
         for row in csv.DictReader(MT):
             List_of_type.append(row)
     return List_of_type
@@ -36,7 +36,7 @@ def typecsv():
 def adressecsv():
     List_of_addresse = []
     #Dictionnaire du types
-    with open ('csv/Machine_Adresse.csv','r')as MA:
+    with open ('csv/Machine_Address.csv','r')as MA:
         for row in csv.DictReader(MA):
             List_of_addresse.append(row)
         return List_of_addresse
@@ -55,15 +55,15 @@ def list_complet():
     #ajout du name
     for row in List_of_complet:
         for row1 in List_of_Name:
-            if row['Id_Machine'] == row1['Id_Machine']:
-                row['Name'] = row1['Machine_Name']
+            if row['Id_machine'] == row1['Id_machine']:
+                row['Name'] = row1['Machine_name']
             else:
                 continue
     
     #ajout du type
     for row in List_of_complet:
         for row1 in List_of_type:
-            if row['Id_Machine'] == row1['Id_Machine']:
+            if row['Id_machine'] == row1['Id_machine']:
                 row['Type'] = row1['Machine_Type']
             else:
                 continue
@@ -71,7 +71,7 @@ def list_complet():
     #ajout des addresses et masque
     for row in List_of_complet:
         for row1 in List_of_addresse:
-            if row['Id_Machine'] == row1['Id_Machine']:
+            if row['Id_machine'] == row1['Id_machine']:
                 row['adresse1'] = row1['Adress1']
                 row['adresse2'] = row1['Adress2']
                 row['Masque'] = row1['Masque']
@@ -127,7 +127,7 @@ def resunique():
     
     #Recuperation de tout les reseaux Pour la création des clusteurs 
     #Utilisation du CSV Machine_Adresse
-    with open ('csv/Machine_Adresse.csv','r')as MA:
+    with open ('csv/Machine_Address.csv','r')as MA:
         for row in csv.reader(MA):        
     #Si l'adresse 1 est vide on passe sinon on l'insert dans la list_of_ip
             if row[1] == '':
@@ -236,7 +236,7 @@ def gen_img():
             
                 
 
-#list_complet()
-#gen_img()
+list_complet()
+gen_img()
 test = resunique()
 print(test)
