@@ -1,7 +1,7 @@
-Id_machine,Machine_type
-1,Router
+Id_Machine,Machine_Type
+1,Routeur
 2,Switch
-3,Client
-4,Router
+3,Machine
+4,Routeur
 5,Switch
-6,Client
+6,Machine
