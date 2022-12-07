@@ -1,172 +1,205 @@
-#Utilisation de diagrams on utilise Graphviz pour rendre le diagramme.
-#Puis on installe diagrams
-
-
-#Cette ligne importera les morceaux de diagramme nécessaires pour créer les éléments de diagramme génériques. 
 from diagrams import Cluster, Edge, Diagram
-#Ajoutez les lignes suivantes pour importer les icônes Droplet, DbaasPrimary et Logstash : 
-from diagrams.aws.management import OpsworksDeployments #Image Switch
 from diagrams.aws.network import VPCRouter  #Image Routeur
 from diagrams.onprem.client import Client   #Image Machine
-
-
-import csv  #Import du mode csv
+from diagrams.aws.management import OpsworksDeployments #Image Switch
+import csv 
 from io import StringIO
 
-import pandas
+"""
+import re #Utilisation des expressions régulières
+#Recuperation des adresse de reseau en /24 -> 255.255.255.0
+ip_24 = re.compile('[0-9]*.[^0-9]')
+#Liste des adresses de reseau
+list_of_res =[];
+#Liste des Adresse IP
+list_of_ip = [];
+"""
 
 
 
 List_of_Interface = [];
 List_of_Name = [];
-List_of_Name2 = []
 List_of_type = []
+List_of_addresse = []
 List_of_complet = []
+
+#lier au find_Interface
+result = []
+interutil = []
+interutil1 = []
+
+#------------------------OUVERTURE DES CSV----------------------
+
 #Dictionnaire du Machine_Interface
 with open ('CSV/Machine_Interface.csv','r')as MI:
     Interface = csv.DictReader(MI)
-
     for row in Interface :
-        #Dictionnaire du CSV interfaces
         List_of_Interface.append(row)
-
+List_of_Inter = List_of_Interface.copy()
     
 #Dictionnaire du Machine_Name
 with open ('CSV/Machine_Name.csv','r')as MI:
     Name = csv.DictReader(MI)
-
     for row in Name :
-        #Dictionnaire du CSV Name
         List_of_Name.append(row)
-        #Liste de tout les Noms des machines
-        List_of_Name2.append(row['Machine_Name'])
 
-
-#Recupere la liste sans doublon des types
+#Dictionnaire du types
 with open ('CSV/Machine_Types.csv','r')as MT:
-    Type = csv.reader(MT)
-    Type.__next__()  #Enlever l'en tếte
+    Type = csv.DictReader(MT)
     for row in Type :
-        x = []
-        y = []
-        if row[1] in List_of_type:
-            continue
-        else :
-            List_of_type.append(row[1])
-        '''
-print (List_of_type)
-print(List_of_Interface)
-print(List_of_Name)
-'''
-#print(List_of_Name2)
+        List_of_type.append(row)
 
-'''
-data = pandas.read_csv('CSV/Machine_Name.csv')
-data1 = pandas.read_csv('CSV/Machine_Types.csv')
-print(data)
-a=pandas.merge(data,data1)
-print(a)
-'''
+#Dictionnaire du types
+with open ('CSV/Machine_Adresse.csv','r')as MA:
+    Addresse = csv.DictReader(MA)
+    for row in Addresse :
+        List_of_addresse.append(row)
 
-#Fusion de list interface et du nom
-'''for row in List_of_Interface:
+#--------------AJOUT DE TOUT LES DONNES DANS UN DICTIONNAIRE--------
+
+#Ajout de l'interface
+List_of_complet = List_of_Interface.copy()
+
+#ajout du name
+for row in List_of_complet:
     for row1 in List_of_Name:
         if row['Id_Machine'] == row1['Id_Machine']:
-            List_of_complet.append(row1)
-        else :
-            continue        
-print(List_of_complet)
-'''
+            row['Name'] = row1['Machine_Name']
+        else:
+            continue
 
-# Le show peut l'ouvrir lors de la création, mais il a été défini sur False puisqu'on travaille sur un hôte Linux. 
-#filename = nom du fichier
-#Shema du reseau commentaire de l'image
-with Diagram("Schema du reseau", show=False, filename="Image_created/Schema de configuration Reseau", direction="BT"):
+#ajout du type
+for row in List_of_complet:
+    for row1 in List_of_type:
+        if row['Id_Machine'] == row1['Id_Machine']:
+            row['Type'] = row1['Machine_Type']
+        else:
+            continue
 
+#ajout des addresses et masque
+for row in List_of_complet:
+    for row1 in List_of_addresse:
+        if row['Id_Machine'] == row1['Id_Machine']:
+            row['adresse1'] = row1['Adress1']
+            row['adresse2'] = row1['Adress2']
+            row['Masque'] = row1['Masque']
+        else:
+            continue
 
-#On crée une image du réseau
+#-------------------------RECUPERATION DES INTERFACES DES MACHINES---------------------------
+
+#tdebut "recherche de liens"
+def find_Interface(path, looking_for):
+    with open(path, 'r') as file:
+        if (path.__contains__("CSV/Machine_Interface")):
+            reader = csv.DictReader(file)
+            
+            for line in reader:
+                test1 = line["Interface1"]
+                test2 = line["Interface2"]
+                if (test1.__contains__(looking_for)):
+                    result.append(test1)
+                if (test2.__contains__(looking_for)):
+                    result.append(test2)
+            
+            return result
+        else:
+            print("here should be an error")
+#fin "recherche de liens"
+
+def find_Interface2(path, looking_for):
+    with open(path, 'r') as file:
+        if (path.__contains__("CSV/Machine_Interface")):
+            reader = csv.DictReader(file)
+            for line in reader:
+                test2 = line["Interface2"]
+                if (test2.__contains__(looking_for)):
+                    result.append(test2)
+            return result
+        else:
+            print("here should be an error")
+#fin "recherche de liens"
+
+#-------------------------GENERATION DE L'IMAGE BASIC------------------------
+
+with Diagram("Schema du reseau", show=False, filename="Image/Image_basic", direction="BT"):
 
 #-----------------------Partie Node----------------------------
         
-        #A chaque nom on lui attribue une image specifice  
-        List_of_Name2[0] = VPCRouter("")
-        List_of_Name2[1] = VPCRouter("")    
-        List_of_Name2[2] = OpsworksDeployments("")
-        List_of_Name2[4] = OpsworksDeployments("")
-        List_of_Name2[3] = Client("")
-        List_of_Name2[5] = Client("")
-
-
+        #A chaque Type on lui attribue une image specifice  
+        for row in List_of_complet:
+            if row['Type'] == 'Routeur':
+                row['Image'] = VPCRouter(str(row['Name']))
+            elif row['Type'] == 'Switch':
+                row['Image'] = OpsworksDeployments(str(row['Name']))
+            elif row ['Type'] == 'Machine':
+                row['Image'] = Client(str(row['Name']))
+            else :
+                print('Error Type')
 #--------------------Partie Edge (Lien)------------------------
-
+    
         #On doit utiliser la même variable que le nom
-        List_of_Name2[0] - List_of_Name2[1]
-        List_of_Name2[1] - List_of_Name2[4]
-        List_of_Name2[4] - List_of_Name2[5]
-        List_of_Name2[0] - List_of_Name2[2]
-        List_of_Name2[3] - List_of_Name2[2]
-
-
-
-
-#Fonctionnalité Avancée
-#Ajout d'une ligne
-'''def add_row(path):
-    #éventuellement check si fichier existant et si non en créer un avec les fieldnames attendus en fonction du path fournit
-    with open (path, 'a') as file:
-        obj = csv.writer(file, dialect='excel')
         
-        #test le chemin fournit pour vérifier de quel type est le fichier que l'on souhaite modifier
-        try:
+        
+        for row in List_of_complet:
             
-            if (path.contains("machine_name")):
-                ID_machine = input("Please enter the ID_machine you wish to add")
-                machine_name = input("Please enter the machine_name you wish to add")
-                obj.writerow([ID_machine, machine_name])
+            interutil.append(row['Interface1'])
+            
+            #print("Ligne sur laquelle on test")
+            #print(row)
+            
+            search = row['Interface1']
+            search = search[3:]
+            #print(search)
+            
+            find_Interface("CSV/Machine_Interface.csv",search)
+            result.remove(str(row['Interface1']))
+            #print("Interface connecter")
+            #print(result)
+            
+            
+            for elem in result:
+                if elem in interutil:
+                    continue
+                else :
+                    for row1 in List_of_complet:
+                        if elem == row1['Interface1']:
+                            row['Image'] - row1['Image']
+                        elif elem == row1['Interface2']:
+                            row['Image'] - row1['Image']
+            result = []
+            #print("Inrerutils")
+            
+        interutil = []
+        for row in List_of_complet:
+            #print("Ligne sur laquelle on test")
+            #print(row)
+            if row['Interface2'] == "":
+                continue
+            else:
+                interutil.append(row['Interface2'])
+                search = row['Interface2']
+                search = search[3:]
+                #print(search)
+                find_Interface2("CSV/Machine_Interface.csv",search)
+                result.remove(str(row['Interface2']))
+                #print(result)
                 
-            elif (path.contains("Routing_table")):
-                ID_machine = input("Please enter the ID_machine you wish to add")
-                network_address = input("Please enter the network_address you wish to add")
-                mask = input("Please enter the mask you wish to add")
-                interfaces = input("Please enter the interfaces you wish to add")
-                obj.writerow([ID_machine, network_address, mask, interfaces])
-                
-            elif (path.contains("machine_address")):
-                ID_machine = input("Please enter the ID_machine you wish to add")
-                address1 = input("Please enter the first address you wish to add")
-                address2 = input("Please enter the second adress you wish to add")
-                mask = input("Please enter the mask you wish to add")
-                obj.writerow([ID_machine, address1, address2, mask])
-                
-            elif (path.contains("machine_interface")):
-                ID_machine = input("Please enter the ID_machine you wish to add")
-                interface1 = input("Please enter the first interface you wish to add")
-                interface2 = input("Please enter the second interface you wish to add")
-                obj.writerow([ID_machine, interface1, interface2])
-                
-            elif (path.contains("machine_type")):
-                ID_machine = input("Please enter the ID_machine you wish to add")
-                machine_type = input("Please enter the type of the machine you wish to add")
-                obj.writerow([ID_machine, machine_type])
-        except:
-            print("Error: the specified file is incorrectly named, verify it contains one of those: machine_name ; routing_table ; machine_address ; machine_interface ; machine_type")
-    file.close()
-'''
+                for elem in result:
+                    if elem in interutil:
+                        continue
+                    else :
+                        #print(elem)
+                        for row1 in List_of_complet:
+                            if elem == row1['Interface2']:
+                                row['Image'] - row1['Image']
+                result = []
+                #print(result)
+            
 
 
 
-'''
-import re #Utilisation des expressions régulières
-
-#Recuperation des adresse de reseau en /24 -> 255.255.255.0
-ip_24 = re.compile('[0-9]*.[^0-9]')
-
-#Liste des adresses de reseau
-list_of_res =[];
-#Liste des Adresse IP
-list_of_ip = [];
-
-
+"""
 #FONCTION AVANCEE
 #Recuperation de tout les reseaux Pour la création des clusteurs 
 #Utilisation du CSV Machine_Adresse
@@ -185,7 +218,6 @@ with open ('CSV/Machine_Adresse.csv','r')as MA:
             continue
         else : 
             list_of_ip.append((row[2]))
-
 
 #recuperation de tout les ip des machine
 print(list_of_ip)
@@ -211,73 +243,4 @@ while i < len(list_of_ip):
 
 print(list_of_res)
 
-'''
-
-
-
 """
-for row in List_of_complet:
-        print(row)
-        for row1 in List_of_complet:
-    
-        #On crée une image du réseau
-            if row['Type'] == 'Routeur':
-                if row1['Type'] == 'Switch':
-                        row['Type'] = VPCRouter("")
-                    
-            elif row['Type'] == 'Switch':
-                if row1['Type'] == 'Switch':
-                    OpsworksDeployments("") - OpsworksDeployments("")
-                elif row1['Type'] == 'Routeur':
-                    OpsworksDeployments("") - VPCRouter("")
-                else:
-                    OpsworksDeployments("") - Client("")
-                            
-            else :
-                if row1['Type'] == 'Switch':
-                    Client("") - OpsworksDeployments("")
-                elif row1['Type'] == 'Routeur':
-                    Client("") - VPCRouter("")
-                else:
-                    Client("") - Client("")
-
-
-
-"""
-
-
-
-
-
-
-#Fonctionnalité Avancée
-#Suppression d'une ligne
-'''def del_row(path, to_del):
-    with open (path, 'w') as file:
-        obj = csv.reader(file, dialect='excel')
-        to_keep = "bloup"
-        content = StringIO.write(to_keep)
-        StringIO.close(content)
-'''
-#Rechercher un element d'un fichier csv
-#def research(path, looking_for):
- #   with open (path, 'r') as file:
-  #      obj = csv.reader(file, dialect='excel')
-   #     next(obj) #sautez entête
-    #    for row in obj
-        
-#def del_row(path, looking_for):
- #   with open(path, 'r') as file:
-  #      obj = csv.reader(file)
-   #     next(obj) #sautez entête
-    #    to_keep = {(row[0], row[2]) for row in obj}
-
-#    f = fileinput.input('fileA', inplace=True) # sys.stdout is redirected to the file
- #   print next(f), # write header as first line
-
-#    w = csv.writer(sys.stdout)
- #   for row in csv.reader(f):
-  #      if (row[0], row[2]) in to_keep: # write it if it's in B
-   #         w.writerow(row)
-            
-#suppression ligne (copie du fichier minus la suppression)
