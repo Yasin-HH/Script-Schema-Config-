@@ -2,8 +2,9 @@ from diagrams import Cluster, Edge, Diagram
 from diagrams.aws.network import VPCRouter  #Image Routeur
 from diagrams.onprem.client import Client   #Image Machine
 from diagrams.aws.management import OpsworksDeployments #Image Switch
-import csv
+import csv 
 from io import StringIO
+
 
 
 List_of_Interface = [];
@@ -12,11 +13,10 @@ List_of_type = []
 List_of_addresse = []
 List_of_complet = []
 
-
 #lier au find_Interface
 result = []
 interutil = []
-
+interutil1 = []
 
 #------------------------OUVERTURE DES CSV----------------------
 
@@ -46,6 +46,7 @@ with open ('CSV/Machine_Adresse.csv','r')as MA:
         List_of_addresse.append(row)
 
 #--------------AJOUT DE TOUT LES DONNES DANS UN DICTIONNAIRE--------
+
 #Ajout de l'interface
 List_of_complet = List_of_Interface.copy()
 
@@ -75,10 +76,8 @@ for row in List_of_complet:
         else:
             continue
 
-
-
-
 #-------------------------RECUPERATION DES INTERFACES DES MACHINES---------------------------
+
 #tdebut "recherche de liens"
 def find_Interface(path, looking_for):
     with open(path, 'r') as file:
@@ -98,7 +97,6 @@ def find_Interface(path, looking_for):
             print("here should be an error")
 #fin "recherche de liens"
 
-
 def find_Interface2(path, looking_for):
     with open(path, 'r') as file:
         if (path.__contains__("CSV/Machine_Interface")):
@@ -114,9 +112,8 @@ def find_Interface2(path, looking_for):
 
 #-------------------------GENERATION DE L'IMAGE BASIC------------------------
 
-with Diagram("Schema du reseau", show=False, filename="Image_created/basic", direction="BT"):
-    
-    
+with Diagram("Schema du reseau", show=False, filename="Image/Image_basic", direction="BT"):
+
 #-----------------------Partie Node----------------------------
         
         #A chaque Type on lui attribue une image specifice  
@@ -125,9 +122,10 @@ with Diagram("Schema du reseau", show=False, filename="Image_created/basic", dir
                 row['Image'] = VPCRouter(str(row['Name']))
             elif row['Type'] == 'Switch':
                 row['Image'] = OpsworksDeployments(str(row['Name']))
-            else :
+            elif row ['Type'] == 'Machine':
                 row['Image'] = Client(str(row['Name']))
-                
+            else :
+                print('Error Type')
 #--------------------Partie Edge (Lien)------------------------
     
         #On doit utiliser la même variable que le nom
@@ -137,17 +135,17 @@ with Diagram("Schema du reseau", show=False, filename="Image_created/basic", dir
             
             interutil.append(row['Interface1'])
             
-            print("Ligne sur laquelle on test")
-            print(row)
+            #print("Ligne sur laquelle on test")
+            #print(row)
             
             search = row['Interface1']
             search = search[3:]
-            print(search)
+            #print(search)
             
             find_Interface("CSV/Machine_Interface.csv",search)
             result.remove(str(row['Interface1']))
-            print("Interface connecter")
-            print(result)
+            #print("Interface connecter")
+            #print(result)
             
             
             for elem in result:
@@ -160,38 +158,31 @@ with Diagram("Schema du reseau", show=False, filename="Image_created/basic", dir
                         elif elem == row1['Interface2']:
                             row['Image'] - row1['Image']
             result = []
-            print("Inrerutils")
+            #print("Inrerutils")
             
         interutil = []
-
         for row in List_of_complet:
-            
-            print("Ligne sur laquelle on test")
-            print(row)
-            
-            
+            #print("Ligne sur laquelle on test")
+            #print(row)
             if row['Interface2'] == "":
                 continue
             else:
-                
                 interutil.append(row['Interface2'])
-                
                 search = row['Interface2']
                 search = search[3:]
-                print(search)
-                
+                #print(search)
                 find_Interface2("CSV/Machine_Interface.csv",search)
                 result.remove(str(row['Interface2']))
-                print(result)
+                #print(result)
                 
                 for elem in result:
                     if elem in interutil:
                         continue
                     else :
-                        print(elem)
+                        #print(elem)
                         for row1 in List_of_complet:
                             if elem == row1['Interface2']:
                                 row['Image'] - row1['Image']
                 result = []
-                print(result)
+                #print(result)
             
