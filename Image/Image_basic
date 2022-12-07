@@ -1,0 +1,16 @@
+digraph "Schema du reseau" {
+	graph [fontcolor="#2D3436" fontname="Sans-Serif" fontsize=15 label="Schema du reseau" nodesep=0.60 pad=2.0 rankdir=BT ranksep=0.75 splines=ortho]
+	node [fixedsize=true fontcolor="#2D3436" fontname="Sans-Serif" fontsize=13 height=1.4 imagescale=true labelloc=b shape=box style=rounded width=1.4]
+	edge [color="#7B8894"]
+	ef095736b0394713a82a47b96e449339 [label=R1 height=1.9 image="C:\Python310\lib\site-packages\resources/aws/network\vpc-router.png" shape=none]
+	"06418244d17b472cb10d2ec46097e073" [label=S2 height=1.9 image="C:\Python310\lib\site-packages\resources/aws/management\opsworks-deployments.png" shape=none]
+	"8fbf6e8896c144d88734bf7f09cc8de7" [label=M3 height=1.9 image="C:\Python310\lib\site-packages\resources/onprem/client\client.png" shape=none]
+	"37ca0660357b440ba9c9be8bf02bb0cd" [label=R4 height=1.9 image="C:\Python310\lib\site-packages\resources/aws/network\vpc-router.png" shape=none]
+	"76a9a2edf48b4dc1a48cb02d6843676b" [label=S5 height=1.9 image="C:\Python310\lib\site-packages\resources/aws/management\opsworks-deployments.png" shape=none]
+	"7a752a0459524c97b134f65275b9e40a" [label=M6 height=1.9 image="C:\Python310\lib\site-packages\resources/onprem/client\client.png" shape=none]
+	ef095736b0394713a82a47b96e449339 -> "37ca0660357b440ba9c9be8bf02bb0cd" [dir=none fontcolor="#2D3436" fontname="Sans-Serif" fontsize=13]
+	"06418244d17b472cb10d2ec46097e073" -> ef095736b0394713a82a47b96e449339 [dir=none fontcolor="#2D3436" fontname="Sans-Serif" fontsize=13]
+	"8fbf6e8896c144d88734bf7f09cc8de7" -> "06418244d17b472cb10d2ec46097e073" [dir=none fontcolor="#2D3436" fontname="Sans-Serif" fontsize=13]
+	"76a9a2edf48b4dc1a48cb02d6843676b" -> "37ca0660357b440ba9c9be8bf02bb0cd" [dir=none fontcolor="#2D3436" fontname="Sans-Serif" fontsize=13]
+	"7a752a0459524c97b134f65275b9e40a" -> "76a9a2edf48b4dc1a48cb02d6843676b" [dir=none fontcolor="#2D3436" fontname="Sans-Serif" fontsize=13]
+}

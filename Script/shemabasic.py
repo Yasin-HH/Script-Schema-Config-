@@ -23,20 +23,20 @@ with open ('csv/Machine_Interface.csv','r')as MI:
         List_of_Interface.append(row)
 List_of_Inter = List_of_Interface.copy()
     
-#Dictionnaire du Machine_Name
-with open ('csv/Machine_Name.csv','r')as MI:
+#Dictionnaire du Machine_name
+with open ('csv/Machine_name.csv','r')as MI:
     Name = csv.DictReader(MI)
     for row in Name :
         List_of_Name.append(row)
 
 #Dictionnaire du types
-with open ('csv/Machine_Types.csv','r')as MT:
+with open ('csv/Machine_type.csv','r')as MT:
     Type = csv.DictReader(MT)
     for row in Type :
         List_of_type.append(row)
 
 #Dictionnaire du types
-with open ('csv/Machine_Adresse.csv','r')as MA:
+with open ('csv/Machine_Address.csv','r')as MA:
     Addresse = csv.DictReader(MA)
     for row in Addresse :
         List_of_addresse.append(row)
@@ -48,25 +48,25 @@ List_of_complet = List_of_Interface.copy()
 #ajout du name
 for row in List_of_complet:
     for row1 in List_of_Name:
-        if row['Id_Machine'] == row1['Id_Machine']:
-            row['Name'] = row1['Machine_Name']
+        if row['Id_machine'] == row1['Id_machine']:
+            row['Name'] = row1['Machine_name']
         else:
             continue
         
 #ajout du type
 for row in List_of_complet:
     for row1 in List_of_type:
-        if row['Id_Machine'] == row1['Id_Machine']:
-            row['Type'] = row1['Machine_Type']
+        if row['Id_machine'] == row1['Id_machine']:
+            row['Type'] = row1['Machine_type']
         else:
             continue
 
 #ajout des addresses et masque
 for row in List_of_complet:
     for row1 in List_of_addresse:
-        if row['Id_Machine'] == row1['Id_Machine']:
-            row['adresse1'] = row1['Adress1']
-            row['adresse2'] = row1['Adress2']
+        if row['Id_machine'] == row1['Id_machine']:
+            row['adresse1'] = row1['Address1']
+            row['adresse2'] = row1['Address2']
             row['Masque'] = row1['Masque']
         else:
             continue
