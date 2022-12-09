@@ -207,6 +207,7 @@ def gen_imgcluster():
     with Diagram("Schema du reseau",show=False, filename="Image/Evolue_Avec_Cluster", direction="BT"):
         
     #---------------------------PARTIE NODE-----------------------------
+        #-----------------------PARTIE SWITCH CAR SANS MASQUE NI ADDRESS
         for row in List_of_complet:
             if row['Type'] == 'Switch':
                 row['Image'] = OpsworksDeployments(str(row['Name']))
@@ -218,7 +219,6 @@ def gen_imgcluster():
             with Cluster(elem):
                 for row in List_of_complet:
                     #print('Ligne en action', row)
-
                     x =[] #Stock temporairement les reseau des adress1 avec l'expression reguliere
                     testad1 = [] #Liste qui va servire de test vis a vis de la liste reseau
 
@@ -274,15 +274,21 @@ def gen_imgcluster():
                     
                     #print('ligne de fin',row)
                     
+                    
 #--------------------------------PARTIE EDGE---------------------------
-
         for row in List_of_complet:          
             #print(row)
             interutil.append(row['Interface1'])
+            
+            
             search = row['Interface1']
             search = search[3:]
+            
+            
             result = find_Interface("csv/Machine_Interface.csv",search)
             result.remove(str(row['Interface1']))
+            
+            
             for elem in result:
                 if elem in interutil:
                     continue
@@ -292,8 +298,9 @@ def gen_imgcluster():
                             row['Image'] - row1['Image']
                         elif elem == row1['Interface2']:
                             row['Image'] - row1['Image']
+                            
             result = []
- 
+
         interutil = []
         for row in List_of_complet:
             if row['Interface2'] == "":
