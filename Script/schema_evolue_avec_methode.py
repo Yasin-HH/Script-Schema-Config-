@@ -204,7 +204,7 @@ def gen_imgcluster():
     interutil = [] #lier au find_Interface
     interutil1 = [] #lier au find_Interface
     
-    with Diagram("Schema du reseau",show=False, filename="Image/Evolue_Avec_Cluster", direction="BT"):
+    with Diagram("Schema du reseau",show=True, filename="Image/Evolue_Avec_Cluster", direction="BT"):
         
     #---------------------------PARTIE NODE-----------------------------
         #-----------------------PARTIE SWITCH CAR SANS MASQUE NI ADDRESS
@@ -216,7 +216,7 @@ def gen_imgcluster():
         
         for elem in List_of_res:
             #print('Reseau en cours',elem)
-            with Cluster(elem):
+            with Cluster("réseau " + elem):
                 for row in List_of_complet:
                     #print('Ligne en action', row)
                     x =[] #Stock temporairement les reseau des adress1 avec l'expression reguliere
@@ -227,11 +227,12 @@ def gen_imgcluster():
                         testad1.append(x[0])
                         #print('Adresse1 en cour de test',testad1)
                         if testad1[0] == elem:
-                        #On passe à l'inisialisation
+                        #On passe à l'initialisation
                             if row['Type'] == 'Routeur':
-                                row['Image'] = VPCRouter(str(row['Name']))
+                                print(row)
+                                row['Image'] = VPCRouter(row['Name'] + "\n IP 1 :" + row['adresse1']+ "\n IP 2 :" + row['adresse2'])
                             elif row ['Type'] == 'Machine':
-                                row['Image'] = Client(str(row['Name']))
+                                row['Image'] = Client(row['Name'] + "\n IP 1 :" + row['adresse1']+ "\n IP 2 :" + row['adresse2'])
                             else :
                                 print('Error Type')
                         else:
@@ -244,9 +245,9 @@ def gen_imgcluster():
                         if testad1[0] == elem:
                         #On passe à l'inisialisation
                             if row['Type'] == 'Routeur':
-                                row['Image'] = VPCRouter(str(row['Name']))
+                                row['Image'] = VPCRouter(row['Name'] + "\n IP 1 :" + row['adresse1']+ "\n IP 2 :" + row['adresse2'])
                             elif row ['Type'] == 'Machine':
-                                row['Image'] = Client(str(row['Name']))
+                                row['Image'] = Client(row['Name'] + "\n IP 1 :" + row['adresse1']+ "\n IP 2 :" + row['adresse2'])
                             else :
                                 print('Error Type')
                         else:
@@ -259,9 +260,9 @@ def gen_imgcluster():
                         if testad1[0] == elem:
                         #On passe à l'inisialisation
                             if row['Type'] == 'Routeur':
-                                row['Image'] = VPCRouter(str(row['Name']))
+                                row['Image'] = VPCRouter(row['Name'] + "\n IP 1 :" + row['adresse1']+ "\n IP 2 :" + row['adresse2'])
                             elif row ['Type'] == 'Machine':
-                                row['Image'] = Client(str(row['Name']))
+                                row['Image'] = Client(row['Name'] + "\n IP 1 :" + row['adresse1']+ "\n IP 2 :" + row['adresse2'])
                             else :
                                 print('Error Type')
                         else:
