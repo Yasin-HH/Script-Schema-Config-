@@ -206,7 +206,7 @@ def gen_imgcluster():
     
     with Diagram("Schema du reseau",show=False, filename="Image/Evolue_Avec_Cluster", direction="BT"):
         
-    #---------------------------Partie Node-----------------------------
+    #---------------------------PARTIE NODE-----------------------------
         for row in List_of_complet:
             if row['Type'] == 'Switch':
                 row['Image'] = OpsworksDeployments(str(row['Name']))
@@ -214,10 +214,10 @@ def gen_imgcluster():
                 continue
         
         for elem in List_of_res:
-            print('Reseau en cours',elem)
+            #print('Reseau en cours',elem)
             with Cluster(elem):
                 for row in List_of_complet:
-                    print('Ligne en action', row)
+                    #print('Ligne en action', row)
 
                     x =[] #Stock temporairement les reseau des adress1 avec l'expression reguliere
                     testad1 = [] #Liste qui va servire de test vis a vis de la liste reseau
@@ -225,7 +225,7 @@ def gen_imgcluster():
                     if row['Masque'] == '255.255.255.0':
                         x = re.findall(ip_24v2,row['adresse1'])    
                         testad1.append(x[0])
-                        print('Adresse1 en cour de test',testad1)
+                        #print('Adresse1 en cour de test',testad1)
                         if testad1[0] == elem:
                         #On passe à l'inisialisation
                             if row['Type'] == 'Routeur':
@@ -250,7 +250,8 @@ def gen_imgcluster():
                             else :
                                 print('Error Type')
                         else:
-                            continue    
+                            continue   
+                         
                     elif row['Masque'] == '255.0.0.0':
                         x = re.findall(ip_08,row['adresse1'])
                         testad1.append(x[0])
@@ -271,12 +272,12 @@ def gen_imgcluster():
                         print('Error Masque', row['Masque'], 'De la machine ID : ',row['Id_machine'])
                         
                     
-                    print('ligne de fin',row)
+                    #print('ligne de fin',row)
                     
-#------------PARTIE EDGE    
+#--------------------------------PARTIE EDGE---------------------------
 
         for row in List_of_complet:          
-            print(row)
+            #print(row)
             interutil.append(row['Interface1'])
             search = row['Interface1']
             search = search[3:]

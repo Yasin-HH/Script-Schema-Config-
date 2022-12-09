@@ -130,7 +130,7 @@ def add_machine(folder =""):
 
 #Sert pour les tests
 def main():
-    add_machine("csv")
-    
+    a =next_id("csv")
+    print(a)
     
 main()
