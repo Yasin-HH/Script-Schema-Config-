@@ -24,13 +24,13 @@ with open ('csv/Machine_Interface.csv','r')as MI:
 List_of_Inter = List_of_Interface.copy()
     
 #Dictionnaire du Machine_name
-with open ('csv/Machine_name.csv','r')as MI:
+with open ('csv/Machine_Name.csv','r')as MI:
     Name = csv.DictReader(MI)
     for row in Name :
         List_of_Name.append(row)
 
 #Dictionnaire du types
-with open ('csv/Machine_type.csv','r')as MT:
+with open ('csv/Machine_Type.csv','r')as MT:
     Type = csv.DictReader(MT)
     for row in Type :
         List_of_type.append(row)
@@ -105,7 +105,7 @@ def find_Interface2(path, looking_for):
 #fin "recherche de liens"
 
 #-------------------------GENERATION DE L'IMAGE BASIC------------------------
-with Diagram("Schema du reseau", show=False, filename="Image/Image_basic", direction="BT"):
+with Diagram("Schema du reseau", show=False, filename="Image/Basic_Sans_Methode", direction="BT"):
 
 #-----------------------Partie Node----------------------------
         #A chaque Type on lui attribue une image specifice  
@@ -118,6 +118,7 @@ with Diagram("Schema du reseau", show=False, filename="Image/Image_basic", direc
                 row['Image'] = Client(str(row['Name']))
             else :
                 print('Error Type')
+            print(row)
                 
 #--------------------Partie Edge (Lien)------------------------ 
         for row in List_of_complet:          

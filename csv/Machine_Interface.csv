@@ -1,7 +1,8 @@
 Id_machine,Interface1,Interface2
 1,Fa1/0,Fa1/1
 2,Fa2/1,Fa2/2
-3,Fa3/2,
 4,Fa4/0,Fa4/3
 5,Fa5/3,Fa5/4
 6,Fa6/4,
+7,Fa7/2,
+3,Fa3/2,NULL

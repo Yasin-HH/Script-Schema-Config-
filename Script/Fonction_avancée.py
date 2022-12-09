@@ -24,8 +24,8 @@ def add_row(path, Id_machine):
             machine_type = str
             is_TypeOK = False
             while is_TypeOK != True:
-                machine_type = input("Please enter the type of the machine you wish to add. It must be one of those: Router ; Switch ; Client : ")
-                if (machine_type == "Router" or machine_type == "Switch" or machine_type == "Client"):
+                machine_type = input("Please enter the type of the machine you wish to add. It must be one of those: Router ; Switch ; Machine : ")
+                if (machine_type == "Router" or machine_type == "Switch" or machine_type == "Machine"):
                     is_TypeOK = True
             write.writerow([Id_machine, machine_type])
         else:
@@ -78,8 +78,8 @@ def mod_row (path, searchkey):
                     machine_type = str
                     is_TypeOK = False
                     while is_TypeOK != True:
-                        machine_type = input(f"Please enter the type of the machine you wish to set for the machine n°{searchkey}. It must be one of those: Router ; Switch ; Client")
-                        if (machine_type == "Router" or machine_type == "Switch" or machine_type == "Client"):
+                        machine_type = input(f"Please enter the type of the machine you wish to set for the machine n°{searchkey}. It must be one of those: Router ; Switch ; Machine")
+                        if (machine_type == "Router" or machine_type == "Switch" or machine_type == "Machine"):
                             is_TypeOK = True
                     write.writerow([Id_machine, machine_type])
                 else:
@@ -125,9 +125,12 @@ def add_machine(folder =""):
         add_row("Machine_Type.csv", id)
         add_row("Machine_Interface.csv", id)
         add_row("Machine_Address.csv", id)
+        
+    
 
 #Sert pour les tests
 def main():
     add_machine("csv")
+    
     
 main()
