@@ -1,4 +1,4 @@
-import csv,os
+import csv,os, schema_evolue_avec_methode
 
 #Ajout de ligne
 def add_row(path, Id_machine):
@@ -6,21 +6,20 @@ def add_row(path, Id_machine):
     with open (path, 'r', newline='') as original, open("tmp.csv", 'a', newline='') as copy:
         write = csv.writer(copy)
         for line in csv.reader(original):
-            print(f"test : {line[0]} == {Id_machine-1}")
             if (line[0] == str(Id_machine-1)):
                 write.writerow(line)
                 #test le chemin fournit pour vérifier de quel type est le fichier que l'on souhaite modifier
                 if (path.__contains__("Machine_Name")):
-                    machine_name = input("Please enter the machine_name you wish to add: ")
+                    machine_name = input(f"Please enter the machine_name you wish to add for the machine n°{Id_machine}: ")
                     write.writerow([Id_machine, machine_name])
                 elif (path.__contains__("Machine_Address")):
-                    address1 = input("Please enter the first address you wish to add: ")
-                    address2 = input("Please enter the second adress you wish to add: ")
-                    mask = input("Please enter the mask you wish to add: ")
+                    address1 = input(f"Please enter the first address you wish to add. Attention: this address will define which cluster the machine n°{Id_machine} is part of")
+                    address2 = input(f"Please enter the second adress you wish to add for the machine n°{Id_machine}: ")
+                    mask = input(f"Please enter the mask you wish to add for the machine n°{Id_machine}: ")
                     write.writerow([Id_machine, address1, address2, mask])
                 elif (path.__contains__("Machine_Interface")):
-                    interface1 = f"Fa{Id_machine}/"+input("Please enter the first interface you wish to add: ")
-                    interface2 = input("Please enter the second interface you wish to add, if you have only one interface please write NULL: ")
+                    interface1 = f"Fa{Id_machine}/"+input(f"Please enter the first interface you wish to add for the machine n°{Id_machine}: ")
+                    interface2 = input(f"Please enter the second interface you wish to add for the machine n°{Id_machine}, if you have only one interface please write NULL: ")
                     if interface2 != "NULL":
                         interface2 = f"Fa{Id_machine}/"+interface2
                     write.writerow([Id_machine, interface1, interface2])
@@ -28,7 +27,7 @@ def add_row(path, Id_machine):
                     machine_type = str
                     is_TypeOK = False
                     while is_TypeOK != True:
-                        machine_type = input("Please enter the type of the machine you wish to add. It must be one of those: Router ; Switch ; Machine : ")
+                        machine_type = input(f"Please enter the type of the machine n°{Id_machine} you wish to add. It must be one of those: Router ; Switch ; Machine : ")
                         if (machine_type == "Router" or machine_type == "Switch" or machine_type == "Machine"):
                             is_TypeOK = True
                     write.writerow([Id_machine, machine_type])
@@ -58,6 +57,7 @@ def del_machine (searchkey, folder =""):
         del_row("Machine_Type.csv", searchkey)
         del_row("Machine_Interface.csv", searchkey)
         del_row("Machine_Address.csv", searchkey)
+    schema_evolue_avec_methode.gen_imgcluster()
 
 #Modification de ligne
 def mod_row (path, searchkey):
@@ -72,7 +72,7 @@ def mod_row (path, searchkey):
                     machine_name = input(f"Please enter the machine_name you wish to set for the machine n°{searchkey}: ")
                     write.writerow([Id_machine, machine_name])
                 elif (path.__contains__("Machine_Address")):
-                    address1 = input(f"Please enter the first address you wish to set for the machine n°{searchkey}: ")
+                    address1 = input(f"Please enter the first address you wish to set for the machine n°{searchkey}. Attention: this address will define which cluster the machine is part of")
                     address2 = input(f"Please enter the second adress you wish to set for the machine n°{searchkey}: ")
                     mask = input(f"Please enter the mask you wish to set for the machine n°{searchkey}: ")
                     write.writerow([Id_machine, address1, address2, mask])
@@ -104,6 +104,7 @@ def mod_machine (searchkey, folder =""):
         mod_row("Machine_Type.csv", searchkey)
         mod_row("Machine_Interface.csv", searchkey)
         mod_row("Machine_Address.csv", searchkey)
+    schema_evolue_avec_methode.gen_imgcluster()
 
 #Initialise le premier identifiant libre
 def next_id(folder =""):
@@ -132,8 +133,7 @@ def add_machine(folder =""):
         add_row("Machine_Type.csv", id)
         add_row("Machine_Interface.csv", id)
         add_row("Machine_Address.csv", id)
-        
-    
+    schema_evolue_avec_methode.gen_imgcluster()        
 
 #Sert pour les tests
 def main():
