@@ -3,33 +3,40 @@ import csv,os
 #Ajout de ligne
 def add_row(path, Id_machine):
     #éventuellement check si fichier existant et si non en créer un avec les fieldnames attendus en fonction du path fournit
-    with open (path, 'a', newline='') as file:
-        write = csv.writer(file)
-        #test le chemin fournit pour vérifier de quel type est le fichier que l'on souhaite modifier
-        if (path.__contains__("Machine_Name")):
-            machine_name = input("Please enter the machine_name you wish to add: ")
-            write.writerow([Id_machine, machine_name])
-        elif (path.__contains__("Machine_Address")):
-            address1 = input("Please enter the first address you wish to add: ")
-            address2 = input("Please enter the second adress you wish to add: ")
-            mask = input("Please enter the mask you wish to add: ")
-            write.writerow([Id_machine, address1, address2, mask])
-        elif (path.__contains__("Machine_Interface")):
-            interface1 = f"Fa{Id_machine}/"+input("Please enter the first interface you wish to add: ")
-            interface2 = input("Please enter the second interface you wish to add, if you have only one interface please write NULL: ")
-            if interface2 != "NULL":
-                interface2 = f"Fa{Id_machine}/"+interface2
-            write.writerow([Id_machine, interface1, interface2])
-        elif (path.__contains__("Machine_Type")):
-            machine_type = str
-            is_TypeOK = False
-            while is_TypeOK != True:
-                machine_type = input("Please enter the type of the machine you wish to add. It must be one of those: Router ; Switch ; Machine : ")
-                if (machine_type == "Router" or machine_type == "Switch" or machine_type == "Machine"):
-                    is_TypeOK = True
-            write.writerow([Id_machine, machine_type])
-        else:
-            print("Error: the specified file is incorrectly named, please verify it contains one of those: Machine_Name ; Machine_Address ; Machine_Interface ; Machine_Type")
+    with open (path, 'r', newline='') as original, open("tmp.csv", 'a', newline='') as copy:
+        write = csv.writer(copy)
+        for line in csv.reader(original):
+            print(f"test : {line[0]} == {Id_machine-1}")
+            if (line[0] == str(Id_machine-1)):
+                write.writerow(line)
+                #test le chemin fournit pour vérifier de quel type est le fichier que l'on souhaite modifier
+                if (path.__contains__("Machine_Name")):
+                    machine_name = input("Please enter the machine_name you wish to add: ")
+                    write.writerow([Id_machine, machine_name])
+                elif (path.__contains__("Machine_Address")):
+                    address1 = input("Please enter the first address you wish to add: ")
+                    address2 = input("Please enter the second adress you wish to add: ")
+                    mask = input("Please enter the mask you wish to add: ")
+                    write.writerow([Id_machine, address1, address2, mask])
+                elif (path.__contains__("Machine_Interface")):
+                    interface1 = f"Fa{Id_machine}/"+input("Please enter the first interface you wish to add: ")
+                    interface2 = input("Please enter the second interface you wish to add, if you have only one interface please write NULL: ")
+                    if interface2 != "NULL":
+                        interface2 = f"Fa{Id_machine}/"+interface2
+                    write.writerow([Id_machine, interface1, interface2])
+                elif (path.__contains__("Machine_Type")):
+                    machine_type = str
+                    is_TypeOK = False
+                    while is_TypeOK != True:
+                        machine_type = input("Please enter the type of the machine you wish to add. It must be one of those: Router ; Switch ; Machine : ")
+                        if (machine_type == "Router" or machine_type == "Switch" or machine_type == "Machine"):
+                            is_TypeOK = True
+                    write.writerow([Id_machine, machine_type])
+                else:
+                    print("Error: the specified file is incorrectly named, please verify it contains one of those: Machine_Name ; Machine_Address ; Machine_Interface ; Machine_Type")
+            else:
+                write.writerow(line)
+    os.replace("tmp.csv", path)
             
 #Suppression de lignes
 def del_row (path, searchkey):
@@ -130,7 +137,6 @@ def add_machine(folder =""):
 
 #Sert pour les tests
 def main():
-    a =next_id("csv")
-    print(a)
+    add_machine("csv")
     
 main()
