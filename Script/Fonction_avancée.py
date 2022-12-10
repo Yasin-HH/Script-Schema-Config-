@@ -1,8 +1,8 @@
-import csv,os, schema_evolue_avec_methode
+import csv,os
 
 #Ajout de ligne
-def add_row(path, Id_machine):
-    #éventuellement check si fichier existant et si non en créer un avec les fieldnames attendus en fonction du path fournit
+def add_row(path, Id_machine, folder=""):
+    path = f"{folder}{path}"
     with open (path, 'r', newline='') as original, open("tmp.csv", 'a', newline='') as copy:
         write = csv.writer(copy)
         for line in csv.reader(original):
@@ -13,14 +13,23 @@ def add_row(path, Id_machine):
                     machine_name = input(f"Please enter the machine_name you wish to add for the machine n°{Id_machine}: ")
                     write.writerow([Id_machine, machine_name])
                 elif (path.__contains__("Machine_Address")):
-                    address1 = input(f"Please enter the first address you wish to add. Attention: this address will define which cluster the machine n°{Id_machine} is part of")
-                    address2 = input(f"Please enter the second adress you wish to add for the machine n°{Id_machine}: ")
-                    mask = input(f"Please enter the mask you wish to add for the machine n°{Id_machine}: ")
+                    if check_type(f"{folder}Machine_Type.csv", Id_machine) == "Switch":
+                        address1 = ""
+                        address2 = ""
+                        mask = ""
+                    else:
+                        address1 = input(f"Please enter the first address you wish to add. Attention: this address will define which cluster the machine n°{Id_machine} is part of: ")
+                        print(is_Interface2(f"{folder}Machine_Interface.csv", Id_machine))
+                        if is_Interface2(f"{folder}Machine_Interface.csv", Id_machine):
+                            address2 = input(f"Please enter the second adress you wish to add for the machine n°{Id_machine}: ")
+                        else:
+                            address2 = ""
+                        mask = input(f"Please enter the mask you wish to add for the machine n°{Id_machine}: ")
                     write.writerow([Id_machine, address1, address2, mask])
                 elif (path.__contains__("Machine_Interface")):
                     interface1 = f"Fa{Id_machine}/"+input(f"Please enter the first interface you wish to add for the machine n°{Id_machine}: ")
-                    interface2 = input(f"Please enter the second interface you wish to add for the machine n°{Id_machine}, if you have only one interface please write NULL: ")
-                    if interface2 != "NULL":
+                    interface2 = input(f"Please enter the second interface you wish to add for the machine n°{Id_machine}, if you have only one interface please leave it blank: ")
+                    if interface2 != "":
                         interface2 = f"Fa{Id_machine}/"+interface2
                     write.writerow([Id_machine, interface1, interface2])
                 elif (path.__contains__("Machine_Type")):
@@ -47,20 +56,15 @@ def del_row (path, searchkey):
     os.replace("tmp.csv", path)
  
 def del_machine (searchkey, folder =""):
-    if folder != "":
-        del_row(f"{folder}/Machine_Name.csv", searchkey)
-        del_row(f"{folder}/Machine_Type.csv", searchkey)
-        del_row(f"{folder}/Machine_Interface.csv", searchkey)
-        del_row(f"{folder}/Machine_Address.csv", searchkey)
-    else:
-        del_row("Machine_Name.csv", searchkey)
-        del_row("Machine_Type.csv", searchkey)
-        del_row("Machine_Interface.csv", searchkey)
-        del_row("Machine_Address.csv", searchkey)
-    schema_evolue_avec_methode.gen_imgcluster()
+    del_row(f"{folder}Machine_Name.csv", searchkey)
+    del_row(f"{folder}Machine_Type.csv", searchkey)
+    del_row(f"{folder}Machine_Interface.csv", searchkey)
+    del_row(f"{folder}Machine_Address.csv", searchkey)
+    ##schema_evolue_avec_methode.gen_imgcluster()
 
 #Modification de ligne
-def mod_row (path, searchkey):
+def mod_row (path, searchkey, folder=""):
+    path = f"{folder}{path}"
     with open (path, 'r') as original, open ("tmp.csv", 'a', newline='') as copy:
         write = csv.writer(copy)
         for line in csv.reader(original):
@@ -72,20 +76,30 @@ def mod_row (path, searchkey):
                     machine_name = input(f"Please enter the machine_name you wish to set for the machine n°{searchkey}: ")
                     write.writerow([Id_machine, machine_name])
                 elif (path.__contains__("Machine_Address")):
-                    address1 = input(f"Please enter the first address you wish to set for the machine n°{searchkey}. Attention: this address will define which cluster the machine is part of")
-                    address2 = input(f"Please enter the second adress you wish to set for the machine n°{searchkey}: ")
-                    mask = input(f"Please enter the mask you wish to set for the machine n°{searchkey}: ")
+                    if check_type(f"{folder}Machine_Type.csv", searchkey) == "Switch":
+                        address1 = ""
+                        address2 = ""
+                        mask = ""
+                    else:
+                        address1 = input(f"Please enter the first address you wish to set for the machine n°{searchkey}. Attention: this address will define which cluster the machine is part of: ")
+                        if is_Interface2(f"{folder}Machine_Interface", searchkey):
+                            address2 = input(f"Please enter the second adress you wish to set for the machine n°{searchkey}: ")
+                        else:
+                            address2= ""
+                        mask = input(f"Please enter the mask you wish to set for the machine n°{searchkey}: ")
                     write.writerow([Id_machine, address1, address2, mask])
                 elif (path.__contains__("Machine_Interface")):
                     interface1 = f"Fa{Id_machine}/"+input(f"Please enter the first interface you wish to set for the machine n°{searchkey}: ")
-                    interface2 = f"Fa{Id_machine}/"+input(f"Please enter the second interface you wish to set for the machine n°{searchkey}: ")
+                    interface2 = input(f"Please enter the second interface you wish to set for the machine n°{searchkey}, if you have only one interface please leave it blank: ")
+                    if interface2 != "":
+                        interface2 = f"Fa{Id_machine}/"+interface2
                     write.writerow([Id_machine, interface1, interface2])
                 elif (path.__contains__("Machine_Type")):
                     Id_machine = input(f"Please enter the Id_machine you wish to set for the machine n°{searchkey}: ")
                     machine_type = str
                     is_TypeOK = False
                     while is_TypeOK != True:
-                        machine_type = input(f"Please enter the type of the machine you wish to set for the machine n°{searchkey}. It must be one of those: Router ; Switch ; Machine")
+                        machine_type = input(f"Please enter the type of the machine you wish to set for the machine n°{searchkey}. It must be one of those: Router ; Switch ; Machine : ")
                         if (machine_type == "Router" or machine_type == "Switch" or machine_type == "Machine"):
                             is_TypeOK = True
                     write.writerow([Id_machine, machine_type])
@@ -94,23 +108,17 @@ def mod_row (path, searchkey):
     os.replace("tmp.csv", path)
                     
 def mod_machine (searchkey, folder =""):
-    if folder != "":
-        mod_row(f"{folder}/Machine_Name.csv", searchkey)
-        mod_row(f"{folder}/Machine_Type.csv", searchkey)
-        mod_row(f"{folder}/Machine_Interface.csv", searchkey)
-        mod_row(f"{folder}/Machine_Address.csv", searchkey)
-    else:
-        mod_row("Machine_Name.csv", searchkey)
-        mod_row("Machine_Type.csv", searchkey)
-        mod_row("Machine_Interface.csv", searchkey)
-        mod_row("Machine_Address.csv", searchkey)
-    schema_evolue_avec_methode.gen_imgcluster()
+    mod_row("Machine_Name.csv", searchkey, folder)
+    mod_row("Machine_Type.csv", searchkey, folder)
+    mod_row("Machine_Interface.csv", searchkey, folder)
+    mod_row("Machine_Address.csv", searchkey, folder)
+    ##schema_evolue_avec_methode.gen_imgcluster()
 
 #Initialise le premier identifiant libre
 def next_id(folder =""):
     result = 1
     if folder != "":
-        path = f"{folder}/Machine_Name.csv"
+        path = f"{folder}Machine_Name.csv"
     else:
         path = "Machine_Name.csv"
     with open (path, 'r') as file:
@@ -123,20 +131,39 @@ def next_id(folder =""):
 #Crée une nouvelle machine
 def add_machine(folder =""):
     id = next_id(folder)
-    if folder != "":
-        add_row(f"{folder}/Machine_Name.csv", id)
-        add_row(f"{folder}/Machine_Type.csv", id)
-        add_row(f"{folder}/Machine_Interface.csv", id)
-        add_row(f"{folder}/Machine_Address.csv", id)
-    else:
-        add_row("Machine_Name.csv", id)
-        add_row("Machine_Type.csv", id)
-        add_row("Machine_Interface.csv", id)
-        add_row("Machine_Address.csv", id)
-    schema_evolue_avec_methode.gen_imgcluster()        
+    add_row("Machine_Name.csv", id, folder)
+    add_row("Machine_Type.csv", id, folder)
+    add_row("Machine_Interface.csv", id, folder)
+    add_row("Machine_Address.csv", id, folder)
+    ##schema_evolue_avec_methode.gen_imgcluster()
+    
+#vérifie le type de la machine
+def check_type(path, id):
+    with open(path, 'r') as file:
+        if (path.__contains__("Machine_Type")):
+            for line in csv.DictReader(file):
+                if (int(line["Id_machine"]) == id):
+                    return line["Machine_type"]
+            print("Specified id doesn't exist")
+        else:
+            print("Error: the specified file is incorrectly named, please verify it contains Machine_Type")
+            
+def is_Interface2(path, id):
+    with open(path, 'r') as file:
+        if (path.__contains__("Machine_Interface")):
+            for line in csv.DictReader(file):
+                if (int(line["Id_machine"]) == id):
+                    if line["Interface2"] != "":
+                        return True
+                    else:
+                        return False
+            print("Specified id doesn't exist")
+        else:
+            print("Error: the specified file is incorrectly named, please verify it contains Machine_Interface")
 
 #Sert pour les tests
 def main():
-    add_machine("csv")
-    
+    add_machine()
+    del_machine(8)
+
 main()
