@@ -1,4 +1,4 @@
-import csv,os
+import csv,os, schema_evolue_avec_methode
 
 #Ajout de ligne
 def add_row(path, Id_machine, folder=""):
@@ -60,7 +60,7 @@ def del_machine (searchkey, folder =""):
     del_row(f"{folder}Machine_Type.csv", searchkey)
     del_row(f"{folder}Machine_Interface.csv", searchkey)
     del_row(f"{folder}Machine_Address.csv", searchkey)
-    ##schema_evolue_avec_methode.gen_imgcluster()
+    schema_evolue_avec_methode.gen_imgcluster()
 
 #Modification de ligne
 def mod_row (path, searchkey, folder=""):
@@ -112,7 +112,7 @@ def mod_machine (searchkey, folder =""):
     mod_row("Machine_Type.csv", searchkey, folder)
     mod_row("Machine_Interface.csv", searchkey, folder)
     mod_row("Machine_Address.csv", searchkey, folder)
-    ##schema_evolue_avec_methode.gen_imgcluster()
+    schema_evolue_avec_methode.gen_imgcluster()
 
 #Initialise le premier identifiant libre
 def next_id(folder =""):
@@ -135,7 +135,7 @@ def add_machine(folder =""):
     add_row("Machine_Type.csv", id, folder)
     add_row("Machine_Interface.csv", id, folder)
     add_row("Machine_Address.csv", id, folder)
-    ##schema_evolue_avec_methode.gen_imgcluster()
+    schema_evolue_avec_methode.gen_imgcluster()
     
 #vérifie le type de la machine
 def check_type(path, id):
