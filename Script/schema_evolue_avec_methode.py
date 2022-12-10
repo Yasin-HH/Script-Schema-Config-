@@ -83,7 +83,7 @@ def list_complet():
 
 
 #-------------------------RECUPERATION DES INTERFACES DES MACHINES---------------------------
-#tdebut "recherche de liens"
+#tdebut "recherche de liens sur interface1 et 2"
 def find_Interface(path, looking_for):
     with open(path, 'r') as file:
         if (path.__contains__("csv/Machine_Interface")):
@@ -101,7 +101,7 @@ def find_Interface(path, looking_for):
         else:
             print("here should be an error")
             
-#fin "recherche de liens"
+#fin "recherche de liens sur interface2"
 def find_Interface2(path, looking_for):
     with open(path, 'r') as file:
         if (path.__contains__("csv/Machine_Interface")):
@@ -118,6 +118,7 @@ def find_Interface2(path, looking_for):
 
 #-----------------------RECUPERATION DES RESEAU UNIQUE
 def reseau_unique():
+    #Expression Reguliere en global
     global ip_08
     ip_08 = re.compile('^\d{1,3}\.')
     global ip_16
@@ -125,72 +126,41 @@ def reseau_unique():
     global ip_24v2
     ip_24v1 = re.compile('[0-9]*.[^0-9]')
     ip_24v2 = re.compile('^\d{1,3}\.\d{1,3}\.\d{1,3}\.')
+    
     List_of_addresse = adressecsv()
 
     list_reseau = []
 
+    #Recuperation des reseaux des csv
     for row in List_of_addresse:
-        #print('Ligne en action',row)
         x = []
         y = []
-        
         if row['Masque']=='255.255.255.0':
             if row['Address1'] == '':
                 continue
             else :
                 x = re.findall(ip_24v2,row['Address1'])
-                #print('x',x)
             if row['Address2'] == '':
                 continue
             else:
                 y = re.findall(ip_24v2,row['Address2'])
-                #print('y',y)
-                
-        elif row['Masque']=='255.255.0.0': 
-            if row['Address1'] == '':
-                continue
-            else :
-                x = re.findall(ip_16,row['Address1'])
-            if row['Address2'] == '':
-                continue
-            else:
-                y = re.findall(ip_16,row['Address2'])
-                
-        elif row['Masque']=='255.0.0.0': 
-            if row['Address1'] == '':
-                continue
-            else :
-                x = re.findall(ip_08,row['Address1'])
-            if row['Address2'] == '':
-                continue
-            else:
-                y = re.findall(ip_08,row['Address2'])
-                
         elif row['Masque']=='':
             continue
-        
         else:
             print('Masque inexistant / pas ajouter au script')
-            
-        #print('avant',list_reseau)
         
+        #Test si les reseaux ne sont pas dans la liste
         for elem in x:
             if x[0] in list_reseau:
                 continue
-            
             else:
                 list_reseau.append(x[0])
-                #print('ajout de x',list_reseau)
-            
-        #print('entre',list_reseau)
         for elem in y:
             if y[0] in list_reseau:
                 continue
             else:
                 list_reseau.append(y[0])
-                #print('ajout de y',list_reseau)
-         
-        #print('apres',list_reseau)
+         #-------------------
             
     return list_reseau
             
@@ -214,19 +184,20 @@ def gen_imgcluster():
             else :
                 continue
         
+        
         for elem in List_of_res:
-            #print('Reseau en cours',elem)
+            #Un cluster pour chaque reseau
             with Cluster("réseau " + elem):
                 for row in List_of_complet:
-                    #print('Ligne en action', row)
                     x =[] #Stock temporairement les reseau des adress1 avec l'expression reguliere
                     testad1 = [] #Liste qui va servire de test vis a vis de la liste reseau
 
                     if row['Masque'] == '255.255.255.0':
                         x = re.findall(ip_24v2,row['adresse1'])    
                         testad1.append(x[0])
-                        #print('Adresse1 en cour de test',testad1)
-                        if testad1[0] == elem:
+
+                        
+                        if testad1[0] == elem: #si l'adress1 fait partie du reseau entrain d'etre initialiser
                         #On passe à l'initialisation
                             if row['Type'] == 'Routeur':
                                 print(row)
@@ -237,71 +208,42 @@ def gen_imgcluster():
                                 print('Error Type')
                         else:
                             continue      
-                        
-                    elif row['Masque'] == '255.255.0.0':
-                        x = re.findall(ip_16,row['adresse1'])
-                        testad1.append(x[0])
-                        
-                        if testad1[0] == elem:
-                        #On passe à l'inisialisation
-                            if row['Type'] == 'Routeur':
-                                row['Image'] = VPCRouter(row['Name'] + "\n IP 1 :" + row['adresse1']+ "\n IP 2 :" + row['adresse2'])
-                            elif row ['Type'] == 'Machine':
-                                row['Image'] = Client(row['Name'] + "\n IP 1 :" + row['adresse1']+ "\n IP 2 :" + row['adresse2'])
-                            else :
-                                print('Error Type')
-                        else:
-                            continue   
-                         
-                    elif row['Masque'] == '255.0.0.0':
-                        x = re.findall(ip_08,row['adresse1'])
-                        testad1.append(x[0])
-                        
-                        if testad1[0] == elem:
-                        #On passe à l'inisialisation
-                            if row['Type'] == 'Routeur':
-                                row['Image'] = VPCRouter(row['Name'] + "\n IP 1 :" + row['adresse1']+ "\n IP 2 :" + row['adresse2'])
-                            elif row ['Type'] == 'Machine':
-                                row['Image'] = Client(row['Name'] + "\n IP 1 :" + row['adresse1']+ "\n IP 2 :" + row['adresse2'])
-                            else :
-                                print('Error Type')
-                        else:
-                            continue 
                     elif row['Masque'] == '': 
                         continue
                     else:
                         print('Error Masque', row['Masque'], 'De la machine ID : ',row['Id_machine'])
-                        
-                    
-                    #print('ligne de fin',row)
                     
                     
 #--------------------------------PARTIE EDGE---------------------------
-        for row in List_of_complet:          
-            #print(row)
-            interutil.append(row['Interface1'])
-            
-            
-            search = row['Interface1']
-            search = search[3:]
-            
-            
-            result = find_Interface("csv/Machine_Interface.csv",search)
-            result.remove(str(row['Interface1']))
-            
-            
-            for elem in result:
-                if elem in interutil:
+        #test interface1 sur interface1 et 2 du csv
+        for row in List_of_complet:     
+            for row in List_of_complet:
+                if row['Interface1'] == "":
                     continue
-                else :
-                    for row1 in List_of_complet:
-                        if elem == row1['Interface1']:
-                            row['Image'] - row1['Image']
-                        elif elem == row1['Interface2']:
-                            row['Image'] - row1['Image']
-                            
+                else:     
+                    interutil.append(row['Interface1'])
+                    
+                    
+                    search = row['Interface1']
+                    search = search[3:]
+                    
+                    
+                    result = find_Interface("csv/Machine_Interface.csv",search)
+                    result.remove(str(row['Interface1']))
+                    
+                    
+                    for elem in result:
+                        if elem in interutil:
+                            continue
+                        else :
+                            for row1 in List_of_complet:
+                                if elem == row1['Interface1']:
+                                    row['Image'] - row1['Image']
+                                elif elem == row1['Interface2']:
+                                    row['Image'] - row1['Image']
+                                    
             result = []
-
+        #test interface2
         interutil = []
         for row in List_of_complet:
             if row['Interface2'] == "":
