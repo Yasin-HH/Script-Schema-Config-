@@ -174,7 +174,7 @@ def gen_imgcluster():
     interutil = [] #lier au find_Interface
     interutil1 = [] #lier au find_Interface
     
-    with Diagram("Schema du reseau",show=True, filename="Image/Evolue_Avec_Cluster", direction="BT"):
+    with Diagram("Schema du reseau",show=False, filename="Image/Evolue_Avec_Cluster", direction="BT"):
         
     #---------------------------PARTIE NODE-----------------------------
         #-----------------------PARTIE SWITCH CAR SANS MASQUE NI ADDRESS
@@ -200,7 +200,6 @@ def gen_imgcluster():
                         if testad1[0] == elem: #si l'adress1 fait partie du reseau entrain d'etre initialiser
                         #On passe à l'initialisation
                             if row['Type'] == 'Routeur':
-                                print(row)
                                 row['Image'] = VPCRouter(row['Name'] + "\n IP 1 :" + row['adresse1']+ "\n IP 2 :" + row['adresse2'])
                             elif row ['Type'] == 'Machine':
                                 row['Image'] = Client(row['Name'] + "\n IP 1 :" + row['adresse1']+ "\n IP 2 :" + row['adresse2'])
@@ -217,7 +216,6 @@ def gen_imgcluster():
 #--------------------------------PARTIE EDGE---------------------------
         #test interface1 sur interface1 et 2 du csv
         for row in List_of_complet:     
-            for row in List_of_complet:
                 if row['Interface1'] == "":
                     continue
                 else:     
@@ -242,7 +240,7 @@ def gen_imgcluster():
                                 elif elem == row1['Interface2']:
                                     row['Image'] - row1['Image']
                                     
-            result = []
+                result = []
         #test interface2
         interutil = []
         for row in List_of_complet:
@@ -262,7 +260,7 @@ def gen_imgcluster():
                         for row1 in List_of_complet:
                             if elem == row1['Interface2']:
                                 row['Image'] - row1['Image']
-                result = []    
+                result = []   
    
    
 gen_imgcluster()
