@@ -9,46 +9,22 @@ from io import StringIO
 
 
 #------------------------OUVERTURE DES csv----------------------
-def interfacecsv(): 
-    List_of_Interface = []
-    #Dictionnaire du Machine_Interface
-    with open ('csv/Machine_Interface.csv','r')as MI:
-        for row in csv.DictReader(MI):
-            List_of_Interface.append(row)
-    return List_of_Interface
+def openCSV(filename): 
+    list = []
+    with open (filename,'r')as CSV:
+        for row in csv.DictReader(CSV):
+            list.append(row)
+    return list
 
-def namecsv():        
-    List_of_Name = []
-    #Dictionnaire du Machine_Name
-    with open ('csv/Machine_Name.csv','r')as MI:
-        for row in csv.DictReader(MI):
-            List_of_Name.append(row)
-    return List_of_Name
-
-def typecsv():
-    List_of_type = []
-    #Dictionnaire du types
-    with open ('csv/Machine_Type.csv','r')as MT:
-        for row in csv.DictReader(MT):
-            List_of_type.append(row)
-    return List_of_type
-
-def adressecsv():
-    List_of_addresse = []
-    #Dictionnaire du types
-    with open ('csv/Machine_Address.csv','r')as MA:
-        for row in csv.DictReader(MA):
-            List_of_addresse.append(row)
-        return List_of_addresse
 #------------------------------
 
 #--------------AJOUT DE TOUT LES DONNES DANS UN DICTIONNAIRE--------
 
 def list_complet():
-    List_of_Interface = interfacecsv()
-    List_of_Name = namecsv()
-    List_of_type = typecsv()
-    List_of_addresse = adressecsv()
+    List_of_Interface = openCSV('csv/Machine_Interface.csv')
+    List_of_Name = openCSV('csv/Machine_Name.csv')
+    List_of_type = openCSV('csv/Machine_Type.csv')
+    List_of_addresse = openCSV('csv/Machine_Address.csv')
     #Ajout de l'interface
     List_of_complet = List_of_Interface.copy()
     
@@ -119,15 +95,10 @@ def find_Interface2(path, looking_for):
 #-----------------------RECUPERATION DES RESEAU UNIQUE
 def reseau_unique():
     #Expression Reguliere en global
-    global ip_08
-    ip_08 = re.compile('^\d{1,3}\.')
-    global ip_16
-    ip_16 = re.compile('^\d{1,3}\.\d{1,3}\.')
     global ip_24v2
-    ip_24v1 = re.compile('[0-9]*.[^0-9]')
     ip_24v2 = re.compile('^\d{1,3}\.\d{1,3}\.\d{1,3}\.')
     
-    List_of_addresse = adressecsv()
+    List_of_addresse = openCSV('csv/Machine_Address.csv')
 
     list_reseau = []
 
@@ -174,7 +145,7 @@ def gen_imgcluster():
     interutil = [] #lier au find_Interface
     interutil1 = [] #lier au find_Interface
     
-    with Diagram("Schema du reseau",show=False, filename="Image/Evolue_Avec_Cluster", direction="BT"):
+    with Diagram("Schema du reseau",show=True, filename="Image/Evolue_Avec_Cluster", direction="BT"):
         
     #---------------------------PARTIE NODE-----------------------------
         #-----------------------PARTIE SWITCH CAR SANS MASQUE NI ADDRESS
